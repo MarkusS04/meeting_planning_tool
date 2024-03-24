@@ -26,7 +26,7 @@ class StartPageScreenState extends State<StartPageScreen> {
     });
   }
 
-  static void setTheme(BuildContext context) async {
+  static Future<void> setTheme(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? url = prefs.getString('theme');
     if (context.mounted) {
