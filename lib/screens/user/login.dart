@@ -48,35 +48,34 @@ class _LoginFormState extends State<LoginForm> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ApiURLTextField(controller: _apiURLController),
-            const SizedBox(height: 20.0),
-            TextField(
-              autofillHints: const [AutofillHints.username],
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'Username',
-                border: OutlineInputBorder(),
+        child: AutofillGroup(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ApiURLTextField(controller: _apiURLController),
+              const SizedBox(height: 20.0),
+              TextField(
+                autofillHints: const [AutofillHints.username],
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                ),
+                textInputAction: TextInputAction.next,
+                autofocus: true,
               ),
-              textInputAction: TextInputAction.next,
-              onEditingComplete: () {
-                FocusScope.of(context).nextFocus();
-              },
-              autofocus: true,
-            ),
-            const SizedBox(height: 20.0),
-            PasswordInputField(
-                pwController: _passwordController,
-                textInputAction: TextInputAction.done,
-                onEditingComplete: () => _login),
-            const SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: _login,
-              child: const Text('Login'),
-            ),
-          ],
+              const SizedBox(height: 20.0),
+              PasswordInputField(
+                  pwController: _passwordController,
+                  textInputAction: TextInputAction.done,
+                  onEditingComplete: () => _login),
+              const SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: _login,
+                child: const Text('Login'),
+              ),
+            ],
+          ),
         ),
       ),
     );
