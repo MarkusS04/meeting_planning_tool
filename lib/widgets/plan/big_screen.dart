@@ -16,21 +16,19 @@ class BigPlanView extends StatelessWidget {
     int c = data.tasks.fold(0, (prev, t) => prev + t.taskDetails.length);
     double colSize = MediaQuery.of(context).size.width / (2 + c);
     colSize = colSize < 200 ? 200 : colSize;
-    return Expanded(
-      child: Scrollbar(
+    return Scrollbar(
+      controller: _scrollController,
+      child: SingleChildScrollView(
         controller: _scrollController,
+        scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
-          controller: _scrollController,
-          scrollDirection: Axis.horizontal,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildPrimHeader(data.tasks, colSize),
-                _buildSecHeader(data.tasks, colSize),
-                ..._buildTableBody(data.data, data.tasks, colSize)
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildPrimHeader(data.tasks, colSize),
+              _buildSecHeader(data.tasks, colSize),
+              ..._buildTableBody(data.data, data.tasks, colSize)
+            ],
           ),
         ),
       ),

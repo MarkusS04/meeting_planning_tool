@@ -4,12 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:intl/intl.dart';
 import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/plan/load_plan.dart';
 import 'package:meeting_planning_tool/screens/navbar.dart';
+import 'package:meeting_planning_tool/widgets/month_picker.dart';
 import 'package:meeting_planning_tool/widgets/plan/view.dart';
-import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -31,7 +30,14 @@ class _PlanPageState extends State<PlanPage> {
       ),
       body: Column(
         children: [
-          _monthPicker(),
+          MonthPicker(
+            month: _month,
+            onDateChanged: (p0) {
+              setState(() {
+                _month = p0;
+              });
+            },
+          ),
           const SizedBox(height: 20.0),
           PlanViewWidget(month: _month)
         ],
@@ -82,35 +88,6 @@ class _PlanPageState extends State<PlanPage> {
         ],
       ),
       bottomNavigationBar: const BottomNavBar(currentIndex: 4),
-    );
-  }
-
-  InkWell _monthPicker() {
-    return InkWell(
-      onTap: () {
-        showMonthPicker(
-          context: context,
-          initialDate: DateTime.now(),
-        ).then((date) {
-          if (date != null) {
-            setState(() {
-              _month = date;
-            });
-          }
-        });
-      },
-      child: InputDecorator(
-        decoration: const InputDecoration(
-          labelText: 'Month',
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(DateFormat('MMMM yyyy').format(_month)),
-            const Icon(Icons.calendar_today),
-          ],
-        ),
-      ),
     );
   }
 }
