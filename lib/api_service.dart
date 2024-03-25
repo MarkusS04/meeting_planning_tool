@@ -45,15 +45,36 @@ class ApiService {
     final Uri url = Uri.parse('${ApiData.apiUrl}/$path')
         .replace(queryParameters: queryParams);
 
-    if (!kIsWeb) {
-      return _downloadFileNative(context, url);
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': '${ApiData.authToken}',
+        'accept': 'application/pdf'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      if (!kIsWeb) {
+        return _downloadFileNative(context, response);
+      } else {
+        _downloadFileWeb(context, response);
+        return "";
+      }
+    } else if (response.statusCode == 401) {
+      if (context.mounted) {
+        unauthorizedDialog(context);
+      }
     } else {
-      return _downloadFileWeb(context, url);
+      if (context.mounted) {
+        _dialogError(context);
+      }
+      throw Exception('Failed to load data: ${response.statusCode}');
     }
+    return "";
   }
 
   static Future<String> _downloadFileNative(
-      BuildContext context, Uri url) async {
+      BuildContext context, http.Response response) async {
     Directory? directory = await getDownloadsDirectory();
 
     if (directory == null) {
@@ -61,58 +82,23 @@ class ApiService {
       return "";
     }
 
-    final response = await http.get(
-      url,
-      headers: {'Authorization': '${ApiData.authToken}'},
-    );
-
-    if (response.statusCode == 200) {
-      File file = File(
-          '${directory.path}/${getFileNameFromHeader(response.headers['content-disposition'], 'Plan.pdf')}');
-      file = await file.writeAsBytes(response.bodyBytes);
-      return file.path;
-    } else if (response.statusCode == 401) {
-      if (context.mounted) {
-        unauthorizedDialog(context);
-      }
-    } else {
-      if (context.mounted) {
-        _dialogError(context);
-      }
-      throw Exception('Failed to load data: ${response.statusCode}');
-    }
-
-    return "";
+    File file = File(
+        '${directory.path}/${getFileNameFromHeader(response.headers['content-disposition'], 'Plan.pdf')}');
+    file = await file.writeAsBytes(response.bodyBytes);
+    return file.path;
   }
 
-  static Future<String> _downloadFileWeb(BuildContext context, Uri url) async {
+  static Future<void> _downloadFileWeb(
+      BuildContext context, http.Response response) async {
     html.AnchorElement anchorElement = html.AnchorElement(href: '');
 
-    final response = await http.get(
-      url,
-      headers: {'Authorization': '${ApiData.authToken}'},
-    );
-
-    if (response.statusCode == 200) {
-      anchorElement.download = getFileNameFromHeader(
-          response.headers['content-disposition'], 'Plan.pdf');
-      final blob = html.Blob([response.bodyBytes]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      anchorElement.href = url;
-      anchorElement.click();
-      html.Url.revokeObjectUrl(url);
-    } else if (response.statusCode == 401) {
-      if (context.mounted) {
-        unauthorizedDialog(context);
-      }
-    } else {
-      if (context.mounted) {
-        _dialogError(context);
-      }
-      throw Exception('Failed to load data: ${response.statusCode}');
-    }
-
-    return "";
+    anchorElement.download = getFileNameFromHeader(
+        response.headers['content-disposition'], 'Plan.pdf');
+    final blob = html.Blob([response.bodyBytes]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    anchorElement.href = url;
+    anchorElement.click();
+    html.Url.revokeObjectUrl(url);
   }
 
   static Future<T> postData<T>(BuildContext context, String path, dynamic data,

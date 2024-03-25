@@ -46,7 +46,7 @@ class _PlanPageState extends State<PlanPage> {
               label: "Get PDF",
               onTap: () async {
                 String path = await ApiService.downloadFile(
-                    context, 'plan/pdf', queryParam(_month));
+                    context, 'plan', queryParam(_month));
                 if (!kIsWeb && !Platform.isLinux && context.mounted) {
                   Navigator.push(
                       context,
