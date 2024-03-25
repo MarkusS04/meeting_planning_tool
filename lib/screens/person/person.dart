@@ -4,6 +4,7 @@ import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
 import 'package:meeting_planning_tool/data/task/task.dart';
 import 'package:meeting_planning_tool/screens/navbar.dart';
+import 'package:meeting_planning_tool/screens/person/person_absence.dart';
 import 'package:meeting_planning_tool/screens/person/task_picker.dart';
 import 'package:meeting_planning_tool/screens/person/task_view.dart';
 
@@ -25,21 +26,6 @@ class _PersonListPageState extends State<PersonListPage> {
     _futurePersons = _fetchPersons();
   }
 
-  Future<List<Person>> _fetchPersons() async {
-    try {
-      List<Person> persons = await ApiService.fetchData(
-          context,
-          "person",
-          {},
-          (data) =>
-              (data as List).map((json) => Person.fromJson(json)).toList());
-      return persons;
-    } catch (e) {
-      Logger().e(e);
-      return List.empty();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +43,7 @@ class _PersonListPageState extends State<PersonListPage> {
     );
   }
 
+  // Widgets
   Widget _personDataView() {
     return FutureBuilder<List<Person>>(
       future: _futurePersons,
@@ -79,38 +66,110 @@ class _PersonListPageState extends State<PersonListPage> {
   }
 
   Widget _buildPersonTile(Person person) {
-    Future<List<Task>> tasksFuture = ApiService.fetchData(
-        context,
-        "person/${person.id}/task",
-        {},
-        (data) => (data as List).map((json) => Task.fromJson(json)).toList());
-
     return ExpansionTile(
       title: Text("${person.givenName} ${person.lastName}"),
       trailing: _personMenu(person),
       children: [
         Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0), // Adjust the padding as needed
-            child: FutureBuilder<List<Task>>(
-                future: tasksFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    List<Task>? tasks = snapshot.data;
-                    if (tasks == null) {
-                      return const Text("No Tasks for Person");
-                    }
-                    return TaskViewPersonPage(tasks: tasks);
-                  }
-                })),
+          padding: const EdgeInsets.symmetric(
+              horizontal: 16.0), // Adjust the padding as needed
+          child: FutureBuilder<List<Task>>(
+            future: _loadPersonTask(person),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                List<Task>? tasks = snapshot.data;
+                if (tasks == null) {
+                  return const Text("No Tasks for Person");
+                }
+                return TaskViewPersonPage(tasks: tasks);
+              }
+            },
+          ),
+        ),
       ],
     );
   }
 
+  PopupMenuButton<String> _personMenu(Person person) {
+    return PopupMenuButton<String>(
+      onSelected: (value) async {
+        switch (value) {
+          case 'Update':
+            _updateTaskPerson(person);
+            break;
+          case 'Absence':
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PersonAbsenceWidget(person: person)),
+            );
+            break;
+        }
+      },
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: 'Update',
+          child: Row(
+            children: [
+              Icon(Icons.change_circle_outlined),
+              Text('Change Tasks'),
+            ],
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'Absence',
+          child: Row(
+            children: [
+              Icon(Icons.calendar_month),
+              Text('Absence'),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  // load data
+  Future<List<Person>> _fetchPersons() async {
+    try {
+      List<Person> persons = await ApiService.fetchData(
+          context,
+          "person",
+          {},
+          (data) =>
+              (data as List).map((json) => Person.fromJson(json)).toList());
+      return persons;
+    } catch (e) {
+      Logger().e(e);
+      return List.empty();
+    }
+  }
+
+  Future<List<Task>> _fetchTask() async {
+    try {
+      List<Task> task = await ApiService.fetchData(
+        context,
+        "task",
+        {},
+        (data) => (data as List).map((json) => Task.fromJson(json)).toList(),
+      );
+      return task;
+    } catch (e) {
+      Logger().e(e);
+      return List.empty();
+    }
+  }
+
+  Future<List<Task>> _loadPersonTask(Person person) async {
+    return ApiService.fetchData(context, "person/${person.id}/task", {},
+        (data) => (data as List).map((json) => Task.fromJson(json)).toList());
+  }
+
+  // actions
   void _addPerson() {
     String givenName = '';
     String lastName = '';
@@ -170,15 +229,9 @@ class _PersonListPageState extends State<PersonListPage> {
     );
   }
 
-  PopupMenuButton<String> _personMenu(Person person) {
+  void _updateTaskPerson(Person person) async {
     List<int> selected = [];
-    ApiService.fetchData(
-            context,
-            "person/${person.id}/task",
-            {},
-            (data) =>
-                (data as List).map((json) => Task.fromJson(json)).toList())
-        .then((value) {
+    _loadPersonTask(person).then((value) {
       List<Task> selectedTasks = value;
 
       for (var t in selectedTasks) {
@@ -187,56 +240,22 @@ class _PersonListPageState extends State<PersonListPage> {
         }
       }
     });
+    List<List<int>>? tasks = await showDialog<List<List<int>>>(
+      context: context,
+      builder: (context) => TaskDialog(tasks: _tasks, selectedTasks: selected),
+    );
 
-    return PopupMenuButton<String>(
-        onSelected: (value) async {
-          if (value == 'Update') {
-            List<List<int>>? tasks = await showDialog<List<List<int>>>(
-              context: context,
-              builder: (context) =>
-                  TaskDialog(tasks: _tasks, selectedTasks: selected),
-            );
-
-            if (tasks != null && tasks.isNotEmpty && mounted) {
-              if (tasks[0].isNotEmpty) {
-                ApiService.postData(context, 'person/${person.id}/task',
-                    tasks[0], {}, (p0) => null);
-              }
-              if (tasks[1].isNotEmpty) {
-                ApiService.deleteData(
-                    context, 'person/${person.id}/task', tasks[1]);
-              }
-            }
-          }
-          setState(() {
-            _futurePersons = _fetchPersons();
-          });
-        },
-        itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'Update',
-                child: Row(
-                  children: [
-                    Icon(Icons.change_circle_outlined),
-                    Text('Change Tasks'),
-                  ],
-                ),
-              )
-            ]);
-  }
-
-  Future<List<Task>> _fetchTask() async {
-    try {
-      List<Task> task = await ApiService.fetchData(
-        context,
-        "task",
-        {},
-        (data) => (data as List).map((json) => Task.fromJson(json)).toList(),
-      );
-      return task;
-    } catch (e) {
-      Logger().e(e);
-      return List.empty();
+    if (tasks != null && tasks.isNotEmpty && mounted) {
+      if (tasks[0].isNotEmpty) {
+        ApiService.postData(
+            context, 'person/${person.id}/task', tasks[0], {}, (p0) => null);
+      }
+      if (tasks[1].isNotEmpty) {
+        ApiService.deleteData(context, 'person/${person.id}/task', tasks[1]);
+      }
     }
+    setState(() {
+      _futurePersons = _fetchPersons();
+    });
   }
 }
