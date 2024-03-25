@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/task/task.dart';
 import 'package:logger/web.dart';
@@ -119,8 +120,7 @@ class _TaskPageState extends State<TaskPage> {
               _tasks = _fetchTask();
             });
           } else if (value == 'Update') {
-            // Navigate to update task screen
-            // (Implement this based on your app's navigation structure)
+            _updateDescr('task/${task.id}', task.descr);
           }
         },
         itemBuilder: (context) => editItems());
@@ -136,8 +136,7 @@ class _TaskPageState extends State<TaskPage> {
             _tasks = _fetchTask();
           });
         } else if (value == 'Update') {
-          // Navigate to update task screen
-          // (Implement this based on your app's navigation structure)
+          _updateDescr('task/${task.id}/detail/${detail.id}', detail.descr);
         }
       },
       itemBuilder: (context) => editItems(),
@@ -155,5 +154,40 @@ class _TaskPageState extends State<TaskPage> {
         _tasks = _fetchTask();
       });
     });
+  }
+
+  void _updateDescr(String url, String old) {
+    final TextEditingController descrController =
+        TextEditingController(text: old);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Update Description'),
+        content: TextField(
+          controller: descrController,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close dialog
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await ApiService.putData(
+                  context, url, {"Descr": descrController.text}, (p0) => null);
+              setState(() {
+                _tasks = _fetchTask();
+              });
+              if (context.mounted) {
+                Navigator.of(context).pop(); // Close dialog
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
   }
 }
