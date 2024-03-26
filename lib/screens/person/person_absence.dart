@@ -5,6 +5,7 @@ import 'package:meeting_planning_tool/data/meeting/meeting.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
 import 'package:meeting_planning_tool/data/plan/load_plan.dart';
 import 'package:meeting_planning_tool/screens/person/person_absence_edit.dart';
+import 'package:meeting_planning_tool/widgets/absence/recurring_absence_widget.dart';
 import 'package:meeting_planning_tool/widgets/month_picker.dart';
 
 class PersonAbsenceWidget extends StatefulWidget {
@@ -37,6 +38,21 @@ class _PersonAbsenceWidgetState extends State<PersonAbsenceWidget> {
   }
 
   Widget _buildBody() {
+    return Column(
+      children: [
+        const Text("Recurring Absence"),
+        Expanded(
+          child: RecurringAbsenceWidget(
+            person: widget.person,
+          ),
+        ),
+        const Divider(),
+        Expanded(child: _buildAbsenceView())
+      ],
+    );
+  }
+
+  Widget _buildAbsenceView() {
     return Column(
       children: [
         _buildMonthPickerAndEditButton(),

@@ -129,6 +129,7 @@ class ApiService {
         return Future.value();
       default:
         Logger().e(response.statusCode);
+        Logger().e(response.body);
         if (context.mounted) {
           _dialogError(context);
         }
