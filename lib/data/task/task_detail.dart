@@ -15,11 +15,11 @@ class TaskDetail {
       return TaskDetail(
           id: json['ID'],
           descr: json['Descr'],
-          taskId: json['TaskId'],
+          taskId: json['TaskID'],
           task: task);
     } else {
       return TaskDetail(
-          id: json['ID'], descr: json['Descr'], taskId: json['TaskId']);
+          id: json['ID'], descr: json['Descr'], taskId: json['TaskID']);
     }
   }
 

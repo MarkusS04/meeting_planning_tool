@@ -114,7 +114,8 @@ class ApiService {
         body: jsonEncode(data));
 
     switch (response.statusCode) {
-      case 200 || 201:
+      case 200:
+      case 201:
         if (response.body.isNotEmpty) {
           dynamic data = json.decode(response.body);
           return parser(data);

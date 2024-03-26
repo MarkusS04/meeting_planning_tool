@@ -246,8 +246,8 @@ class _MeetingPageState extends State<MeetingPage> {
                 List<Map<String, dynamic>> data = [
                   {"Date": DateFormat("yyyy-MM-dd").format(picked)}
                 ];
-                ApiService.postData(
-                    context, "meeting", data, {}, (p0) => {null});
+                ApiService.postData<void>(
+                    context, "meeting", data, {}, (p0) => {});
                 setState(() {
                   _meetings = _fetchMeetings();
                 });
