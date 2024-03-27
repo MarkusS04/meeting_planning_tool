@@ -1,3 +1,4 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +11,7 @@ import 'package:meeting_planning_tool/screens/meeting/meeting_absence_edit.dart'
 import 'package:meeting_planning_tool/screens/navbar.dart';
 import 'package:meeting_planning_tool/utils/dialog_utils.dart';
 import 'package:meeting_planning_tool/widgets/edit_menu.dart';
+import 'package:meeting_planning_tool/widgets/meeting/multi_select.dart';
 
 class MeetingPage extends StatefulWidget {
   const MeetingPage({super.key});
@@ -254,7 +256,18 @@ class _MeetingPageState extends State<MeetingPage> {
               }
             }),
         SpeedDialChild(
-            child: const Icon(Icons.edit_calendar), label: "Add Multiple")
+          child: const Icon(Icons.edit_calendar),
+          label: "Add Multiple",
+          onTap: () async {
+            await showDialog(
+              context: context,
+              builder: (context) => const MultiDateSelector(),
+            );
+            setState(() {
+              _meetings = _fetchMeetings();
+            });
+          },
+        )
       ],
     );
   }
