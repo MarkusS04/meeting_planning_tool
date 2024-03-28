@@ -3,6 +3,7 @@ import 'package:meeting_planning_tool/data/api.dart';
 import 'package:meeting_planning_tool/screens/navbar.dart';
 import 'package:meeting_planning_tool/screens/settings/apperance.dart';
 import 'package:meeting_planning_tool/screens/settings/change_api.dart';
+import 'package:meeting_planning_tool/screens/settings/language.dart';
 import 'package:meeting_planning_tool/screens/settings/version.dart';
 import 'package:meeting_planning_tool/screens/user/change_pw.dart';
 import 'package:meeting_planning_tool/widgets/settings_group.dart';
@@ -24,7 +25,12 @@ class SettingsPage extends StatelessWidget {
         child: Column(children: [
           SettingGroup(
             title: locale.apperance,
-            settingItems: const [SetApperance()],
+            settingItems: [
+              const SetApperance(),
+              SetLanguageWidget(
+                locale: Localizations.localeOf(context),
+              )
+            ],
           ),
           SettingGroup(
             title: locale.appInfo,

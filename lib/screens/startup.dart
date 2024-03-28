@@ -11,9 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartPageScreen extends StatefulWidget {
-  const StartPageScreen({super.key, required this.initTheme});
+  const StartPageScreen(
+      {super.key, required this.initTheme, required this.locale});
 
   final ThemeMode initTheme;
+  final Locale locale;
 
   @override
   State<StartPageScreen> createState() => StartPageScreenState();
@@ -21,9 +23,16 @@ class StartPageScreen extends StatefulWidget {
 
 class StartPageScreenState extends State<StartPageScreen> {
   static ThemeMode? _theme;
+  static Locale? _locale;
   void _setTheme(ThemeMode mode) {
     setState(() {
       _theme = mode;
+    });
+  }
+
+  void _setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
     });
   }
 
@@ -47,10 +56,19 @@ class StartPageScreenState extends State<StartPageScreen> {
     }
   }
 
+  static void setLocale(BuildContext context, Locale locale) {
+    StartPageScreenState? state =
+        context.findAncestorStateOfType<StartPageScreenState>();
+    if (state != null) {
+      state._setLocale(locale);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _theme = widget.initTheme;
+    _locale = widget.locale;
   }
 
   @override
@@ -58,7 +76,7 @@ class StartPageScreenState extends State<StartPageScreen> {
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('de', 'DE'),
+      locale: _locale,
       title: 'Meeting Planning Tool',
       theme: ThemeData(
         primarySwatch: Colors.blue,

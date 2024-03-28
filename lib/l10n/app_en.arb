@@ -34,6 +34,7 @@
   "home": "Home",
   "id":"ID",
   "lastname": "Lastname",
+  "lang": "Language",
   "login": "Login",
   "logout": "Logout",
   "meeting": "Meeting",
