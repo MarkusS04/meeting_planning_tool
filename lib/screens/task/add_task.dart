@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/task/task.dart';
 import 'package:meeting_planning_tool/data/task/task_detail.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -16,6 +17,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   Task? _task;
 
+  late AppLocalizations _locale;
+
+  @override
+  void didChangeDependencies() {
+    _locale = AppLocalizations.of(context);
+    super.didChangeDependencies();
+  }
+
   @override
   void dispose() {
     _descrController.dispose();
@@ -29,7 +38,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Add New Task'),
+          title: Text(AppLocalizations.of(context).addTask),
         ),
         body: Padding(
             padding: const EdgeInsets.all(20),
@@ -40,7 +49,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 _buildTaskDetailList(),
                 ElevatedButton(
                   onPressed: _addTaskDetail,
-                  child: const Text('Add Task Detail'),
+                  child: Text(AppLocalizations.of(context).addTaskDetail),
                 ),
                 const SizedBox(height: 20.0),
                 _buildSubmitButton(),
@@ -51,9 +60,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget _buildDescriptionTextField() {
     return TextField(
       controller: _descrController,
-      decoration: const InputDecoration(
-        labelText: "Description",
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: _locale.description,
+        border: const OutlineInputBorder(),
       ),
     );
   }
@@ -72,7 +81,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   child: TextField(
                     controller: _taskDetailControllers[index],
                     decoration: InputDecoration(
-                      labelText: "Task Detail ${index + 1}",
+                      labelText: "${_locale.taskDetail} ${index + 1}",
                       border: const OutlineInputBorder(),
                     ),
                   ),
@@ -101,7 +110,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
           Navigator.pop(context, true);
         },
-        child: const Text('Submit'),
+        child: Text(MaterialLocalizations.of(context).saveButtonLabel),
       ),
     );
   }
@@ -119,7 +128,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
     // Create Task object with description and task details
     _task = Task(
-      id: 0, // ID will be set by API
+      id: 0,
       descr: description,
       taskDetails: taskDetails
           .map((detail) => TaskDetail(id: 0, descr: detail, taskId: 0))

@@ -3,6 +3,7 @@ import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
 import 'package:meeting_planning_tool/data/plan/plan.dart';
 import 'package:meeting_planning_tool/widgets/plan/plan_person_update.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PlanPersonTile extends StatefulWidget {
   final PersonWithPlanId? person;
@@ -28,11 +29,13 @@ class _PlanPersonTileState extends State<PlanPersonTile> {
     if (widget.task != null) {
       text.add(Text('${widget.task}:'));
     }
-    text.add(Text(_person != null
-        ? (_person!.person != null && _person!.person!.givenName != ''
-            ? '${_person!.person!.givenName} ${_person!.person!.lastName}'
-            : 'Not assigned')
-        : 'No Entry'));
+    text.add(
+      Text(_person != null
+          ? (_person!.person != null && _person!.person!.givenName != ''
+              ? '${_person!.person!.givenName} ${_person!.person!.lastName}'
+              : AppLocalizations.of(context).notAssigned)
+          : AppLocalizations.of(context).noEntryGenerated),
+    );
     return ListTile(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

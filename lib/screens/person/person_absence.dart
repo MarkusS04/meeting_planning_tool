@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/meeting/meeting.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
 import 'package:meeting_planning_tool/data/plan/load_plan.dart';
 import 'package:meeting_planning_tool/screens/person/person_absence_edit.dart';
 import 'package:meeting_planning_tool/widgets/absence/recurring_absence_widget.dart';
+import 'package:meeting_planning_tool/widgets/date_text.dart';
 import 'package:meeting_planning_tool/widgets/month_picker.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonAbsenceWidget extends StatefulWidget {
   final Person person;
@@ -31,7 +32,7 @@ class _PersonAbsenceWidgetState extends State<PersonAbsenceWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Absence ${widget.person.givenName} ${widget.person.lastName}'),
+            '${AppLocalizations.of(context).absence2} ${widget.person.givenName} ${widget.person.lastName}'),
       ),
       body: _buildBody(),
     );
@@ -40,7 +41,7 @@ class _PersonAbsenceWidgetState extends State<PersonAbsenceWidget> {
   Widget _buildBody() {
     return Column(
       children: [
-        const Text("Recurring Absence"),
+        Text(AppLocalizations.of(context).recurringAbsence),
         Expanded(
           child: RecurringAbsenceWidget(
             person: widget.person,
@@ -63,13 +64,15 @@ class _PersonAbsenceWidgetState extends State<PersonAbsenceWidget> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Center(
+                    child: Text(
+                        '${AppLocalizations.of(context).error}: ${snapshot.error}'));
               } else {
                 final meetings = snapshot.data;
                 if (meetings != null && meetings.isNotEmpty) {
                   return _buildMeetingList(meetings);
                 }
-                return const Center(child: Text('No absence'));
+                return Center(child: Text(AppLocalizations.of(context).noData));
               }
             },
           ),
@@ -137,7 +140,7 @@ class _PersonAbsenceWidgetState extends State<PersonAbsenceWidget> {
                   }
                 }
               },
-              child: const Text('Edit Absence'),
+              child: Text(AppLocalizations.of(context).editAbsence),
             ),
           ),
         ],
@@ -151,15 +154,8 @@ class _PersonAbsenceWidgetState extends State<PersonAbsenceWidget> {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(DateFormat("EEEE")
-                  .format(DateTime.parse(meetings[index].date))),
-              Text(DateFormat("yyyy-MM-dd")
-                  .format(DateTime.parse(meetings[index].date))),
-              const SizedBox(width: 5),
-            ],
+          child: ShowDateWidget(
+            date: DateTime.parse(meetings[index].date),
           ),
         );
       },

@@ -8,6 +8,7 @@ import 'package:meeting_planning_tool/screens/person/person.dart';
 import 'package:meeting_planning_tool/screens/plan/plan.dart';
 import 'package:meeting_planning_tool/screens/task/task_overview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartPageScreen extends StatefulWidget {
   const StartPageScreen({super.key, required this.initTheme});
@@ -55,6 +56,9 @@ class StartPageScreenState extends State<StartPageScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('de', 'DE'),
       title: 'Meeting Planning Tool',
       theme: ThemeData(
         primarySwatch: Colors.blue,

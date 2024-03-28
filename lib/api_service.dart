@@ -9,8 +9,8 @@ import 'dart:convert';
 import 'package:meeting_planning_tool/utils/dialog_utils.dart';
 import 'package:meeting_planning_tool/utils/file_handler.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'package:universal_html/html.dart' as html;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ApiService {
   static Future<T> fetchData<T>(BuildContext context, String path,
@@ -201,12 +201,12 @@ class ApiService {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Error'),
-        content: const Text('Failed to fetch data'),
+        title: Text(AppLocalizations.of(context).error),
+        content: Text(AppLocalizations.of(context).failedFetchData),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(MaterialLocalizations.of(context).okButtonLabel),
           ),
         ],
       ),

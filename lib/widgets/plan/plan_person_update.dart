@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonDropdown extends StatefulWidget {
   final List<Person> personsAvailable;
@@ -30,7 +31,7 @@ class _PersonDropdownState extends State<PersonDropdown> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Change Person'),
+      title: Text(AppLocalizations.of(context).changePerson),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -55,7 +56,7 @@ class _PersonDropdownState extends State<PersonDropdown> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
         ),
         TextButton(
           onPressed: () async {
@@ -63,7 +64,7 @@ class _PersonDropdownState extends State<PersonDropdown> {
                 {'id': selectedPerson.id}, (p0) => null);
             Navigator.of(context).pop();
           },
-          child: const Text('Update'),
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
         ),
       ],
     );

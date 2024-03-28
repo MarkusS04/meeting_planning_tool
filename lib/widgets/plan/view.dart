@@ -3,6 +3,7 @@ import 'package:meeting_planning_tool/data/plan/load_plan.dart';
 import 'package:meeting_planning_tool/data/plan/plan.dart';
 import 'package:meeting_planning_tool/widgets/plan/big_screen.dart';
 import 'package:meeting_planning_tool/widgets/plan/small_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PlanViewWidget extends StatefulWidget {
   final DateTime month;
@@ -28,7 +29,9 @@ class _PlanViewWidgetState extends State<PlanViewWidget> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(
+              child: Text(
+                  '${AppLocalizations.of(context).error}: ${snapshot.error}'));
         } else {
           TransformedPlan? data = snapshot.data;
           if (data != null && data.data.isNotEmpty) {
@@ -38,7 +41,7 @@ class _PlanViewWidgetState extends State<PlanViewWidget> {
               return SmallPlanView(data: data);
             }
           } else {
-            return const Center(child: Text('No Data'));
+            return Center(child: Text(AppLocalizations.of(context).noData));
           }
         }
       },

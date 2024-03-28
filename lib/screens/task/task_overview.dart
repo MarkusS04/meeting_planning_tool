@@ -6,6 +6,7 @@ import 'package:meeting_planning_tool/data/task/task_detail.dart';
 import 'package:meeting_planning_tool/screens/navbar.dart';
 import 'package:meeting_planning_tool/screens/task/add_task.dart';
 import 'package:meeting_planning_tool/widgets/edit_menu.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -27,7 +28,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Tasks"),
+          title: Text(AppLocalizations.of(context).task),
           actions: [_reloadButton()],
         ),
         body: FutureBuilder<List<Task>>(
@@ -36,7 +37,9 @@ class _TaskPageState extends State<TaskPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(
+                  child: Text(
+                      '${AppLocalizations.of(context).error}: ${snapshot.error}'));
             } else {
               List<Task>? task = snapshot.data;
               return _dataView(task!);
@@ -73,7 +76,8 @@ class _TaskPageState extends State<TaskPage> {
             itemBuilder: (context, index) {
               return ExpansionTile(
                 title: Text(task[index].descr),
-                subtitle: Text("ID: ${task[index].id}"),
+                subtitle: Text(
+                    '${AppLocalizations.of(context).id}: ${task[index].id}'),
                 trailing: _taskMenu(task[index]),
                 children: [
                   Padding(
@@ -84,7 +88,8 @@ class _TaskPageState extends State<TaskPage> {
                       children: task[index].taskDetails.map((taskDetail) {
                         return ListTile(
                             title: Text(taskDetail.descr),
-                            subtitle: Text("ID: ${taskDetail.id}"),
+                            subtitle: Text(
+                                '${AppLocalizations.of(context).id}: ${taskDetail.id}'),
                             trailing: _taskdetailMenu(taskDetail, task[index]));
                       }).toList(),
                     ),
@@ -92,7 +97,7 @@ class _TaskPageState extends State<TaskPage> {
                 ],
               );
             })
-        : const Center(child: Text("No Data available"));
+        : Center(child: Text(AppLocalizations.of(context).noData));
   }
 
   Future<List<Task>> _fetchTask() async {
@@ -122,7 +127,7 @@ class _TaskPageState extends State<TaskPage> {
             _updateDescr('task/${task.id}', task.descr);
           }
         },
-        itemBuilder: (context) => editItems());
+        itemBuilder: (context) => editItems(context));
   }
 
   PopupMenuButton<String> _taskdetailMenu(TaskDetail detail, Task task) {
@@ -138,7 +143,7 @@ class _TaskPageState extends State<TaskPage> {
           _updateDescr('task/${task.id}/detail/${detail.id}', detail.descr);
         }
       },
-      itemBuilder: (context) => editItems(),
+      itemBuilder: (context) => editItems(context),
     );
   }
 
@@ -161,7 +166,7 @@ class _TaskPageState extends State<TaskPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Update Description'),
+        title: Text(AppLocalizations.of(context).changeDescription),
         content: TextField(
           controller: descrController,
         ),
@@ -170,7 +175,7 @@ class _TaskPageState extends State<TaskPage> {
             onPressed: () {
               Navigator.of(context).pop(); // Close dialog
             },
-            child: const Text('Cancel'),
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           ),
           TextButton(
             onPressed: () async {
@@ -183,7 +188,7 @@ class _TaskPageState extends State<TaskPage> {
                 Navigator.of(context).pop(); // Close dialog
               }
             },
-            child: const Text('Save'),
+            child: Text(MaterialLocalizations.of(context).saveButtonLabel),
           ),
         ],
       ),

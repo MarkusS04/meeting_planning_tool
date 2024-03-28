@@ -1,4 +1,3 @@
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
@@ -10,8 +9,10 @@ import 'package:meeting_planning_tool/screens/meeting/meeting_absence.dart';
 import 'package:meeting_planning_tool/screens/meeting/meeting_absence_edit.dart';
 import 'package:meeting_planning_tool/screens/navbar.dart';
 import 'package:meeting_planning_tool/utils/dialog_utils.dart';
+import 'package:meeting_planning_tool/widgets/date_text.dart';
 import 'package:meeting_planning_tool/widgets/edit_menu.dart';
 import 'package:meeting_planning_tool/widgets/meeting/multi_select.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MeetingPage extends StatefulWidget {
   const MeetingPage({super.key});
@@ -21,22 +22,24 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
+  late DateTime _startDate;
+  late DateTime _endDate;
   late Future<List<Meeting>> _meetings;
+  late AppLocalizations _locale;
+  late String? _localString;
 
-  final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
+  @override
+  void didChangeDependencies() {
+    _locale = AppLocalizations.of(context);
+    _localString = Localizations.localeOf(context).languageCode;
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
     super.initState();
-    final firstDayOfNextMonth =
-        DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
-    final lastDayOfNextMonth =
-        DateTime(firstDayOfNextMonth.year, firstDayOfNextMonth.month + 1, 0);
-    _startDateController.text =
-        DateFormat('yyyy-MM-dd').format(firstDayOfNextMonth);
-    _endDateController.text =
-        DateFormat('yyyy-MM-dd').format(lastDayOfNextMonth);
+    _startDate = DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
+    _endDate = DateTime(_startDate.year, _startDate.month + 1, 0);
     _meetings = _fetchMeetings();
   }
 
@@ -44,7 +47,7 @@ class _MeetingPageState extends State<MeetingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meeting List'),
+        title: Text(_locale.meeting),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -65,13 +68,13 @@ class _MeetingPageState extends State<MeetingPage> {
           _selectStartDate(context);
         },
         child: InputDecorator(
-          decoration: const InputDecoration(
-            labelText: 'Start Date',
+          decoration: InputDecoration(
+            labelText: _locale.beginning,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(_startDateController.text),
+              Text(DateFormat.yMMMd(_localString).format(_startDate)),
               const Icon(Icons.calendar_today),
             ],
           ),
@@ -83,13 +86,13 @@ class _MeetingPageState extends State<MeetingPage> {
           _selectEndDate(context);
         },
         child: InputDecorator(
-          decoration: const InputDecoration(
-            labelText: 'End Date',
+          decoration: InputDecoration(
+            labelText: _locale.ending,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(_endDateController.text),
+              Text(DateFormat.yMMMd(_localString).format(_endDate)),
               const Icon(Icons.calendar_today),
             ],
           ),
@@ -102,13 +105,13 @@ class _MeetingPageState extends State<MeetingPage> {
   void _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _startDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
     if (picked != null) {
       setState(() {
-        _startDateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _startDate = picked;
         _meetings = _fetchMeetings();
       });
     }
@@ -117,13 +120,13 @@ class _MeetingPageState extends State<MeetingPage> {
   void _selectEndDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _endDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
     if (picked != null) {
       setState(() {
-        _endDateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _endDate = picked;
         _meetings = _fetchMeetings();
       });
     }
@@ -138,11 +141,11 @@ class _MeetingPageState extends State<MeetingPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('${_locale.error}: ${snapshot.error}'));
           } else {
             List<Meeting>? meetings = snapshot.data;
             if (meetings == null || meetings.isEmpty) {
-              return const Center(child: Text('No meetings found.'));
+              return Center(child: Text(_locale.noData));
             }
             return ListView.builder(
               itemCount: meetings.length,
@@ -159,15 +162,8 @@ class _MeetingPageState extends State<MeetingPage> {
                   margin: const EdgeInsets.symmetric(
                       vertical: 4), // Set margin here
                   child: ExpansionTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(DateFormat("EEEE")
-                            .format(DateTime.parse(meeting.date))),
-                        Text(DateFormat("yyyy-MM-dd")
-                            .format(DateTime.parse(meeting.date))),
-                        const SizedBox(width: 5),
-                      ],
+                    title: ShowDateWidget(
+                      date: DateTime.parse(meeting.date),
                     ),
                     trailing: _meetingMenu(meeting),
                     children: [
@@ -217,11 +213,14 @@ class _MeetingPageState extends State<MeetingPage> {
         }
       }
     }, itemBuilder: (context) {
-      List<PopupMenuEntry<String>> edit = editItems();
-      edit.add(const PopupMenuItem(
+      List<PopupMenuEntry<String>> edit = editItems(context);
+      edit.add(PopupMenuItem(
         value: 'Absence',
         child: Row(
-          children: [Icon(Icons.event_available), Text('Edit Absence')],
+          children: [
+            const Icon(Icons.event_available),
+            Text(_locale.editAbsence),
+          ],
         ),
       ));
       return edit;
@@ -236,7 +235,7 @@ class _MeetingPageState extends State<MeetingPage> {
       children: [
         SpeedDialChild(
             child: const Icon(Icons.create_rounded),
-            label: "Add One",
+            label: _locale.addOne,
             onTap: () async {
               final DateTime? picked = await showDatePicker(
                 context: context,
@@ -257,7 +256,7 @@ class _MeetingPageState extends State<MeetingPage> {
             }),
         SpeedDialChild(
           child: const Icon(Icons.edit_calendar),
-          label: "Add Multiple",
+          label: _locale.addMultiple,
           onTap: () async {
             await showDialog(
               context: context,
@@ -273,14 +272,14 @@ class _MeetingPageState extends State<MeetingPage> {
   }
 
   Future<List<Meeting>> _fetchMeetings() async {
-    final startDate = _startDateController.text;
-    final endDate = _endDateController.text;
-
     try {
       List<Meeting> meeting = await ApiService.fetchData(
         context,
         "meeting",
-        {"StartDate": startDate, "EndDate": endDate},
+        {
+          "StartDate": DateFormat('yyyy-MM-dd').format(_startDate),
+          "EndDate": DateFormat('yyyy-MM-dd').format(_endDate),
+        },
         (data) => (data as List).map((json) => Meeting.fromJson(json)).toList(),
       );
       return meeting;

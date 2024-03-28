@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:meeting_planning_tool/data/plan/plan.dart';
 import 'package:meeting_planning_tool/data/task/task.dart';
 import 'package:meeting_planning_tool/widgets/plan/person_tile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BigPlanView extends StatelessWidget {
   final TransformedPlan data;
@@ -25,9 +26,9 @@ class BigPlanView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildPrimHeader(data.tasks, colSize),
-              _buildSecHeader(data.tasks, colSize),
-              ..._buildTableBody(data.data, data.tasks, colSize)
+              _buildPrimHeader(data.tasks, colSize, context),
+              _buildSecHeader(data.tasks, colSize, context),
+              ..._buildTableBody(data.data, data.tasks, colSize, context)
             ],
           ),
         ),
@@ -35,13 +36,14 @@ class BigPlanView extends StatelessWidget {
     );
   }
 
-  Widget _buildPrimHeader(List<Task> tasks, double colWidth) {
+  Widget _buildPrimHeader(
+      List<Task> tasks, double colWidth, BuildContext context) {
     return Row(children: [
       Container(
         decoration: BoxDecoration(border: Border.all()),
         width: colWidth * 2,
         height: _containerHeight,
-        child: const Text("Date"),
+        child: Text(AppLocalizations.of(context).date),
       ),
       ...tasks.map((t) => Container(
             decoration: BoxDecoration(border: Border.all()),
@@ -52,18 +54,19 @@ class BigPlanView extends StatelessWidget {
     ]);
   }
 
-  Widget _buildSecHeader(List<Task> tasks, double colWidth) {
+  Widget _buildSecHeader(
+      List<Task> tasks, double colWidth, BuildContext context) {
     List<Widget> secHeader = [
       Container(
           decoration: BoxDecoration(border: Border.all()),
           width: colWidth,
           height: _containerHeight,
-          child: const Text("Day")),
+          child: Text(AppLocalizations.of(context).day)),
       Container(
           decoration: BoxDecoration(border: Border.all()),
           width: colWidth,
           height: _containerHeight,
-          child: const Text("Date"))
+          child: Text(AppLocalizations.of(context).date))
     ];
     for (var task in tasks) {
       for (var detail in task.taskDetails) {
@@ -79,10 +82,10 @@ class BigPlanView extends StatelessWidget {
     ));
   }
 
-  List<Widget> _buildTableBody(
-      List<PlanMeetingData> data, List<Task> tasks, double colWidth) {
+  List<Widget> _buildTableBody(List<PlanMeetingData> data, List<Task> tasks,
+      double colWidth, BuildContext context) {
     List<Widget> rows = [];
-
+    final locale = Localizations.localeOf(context).languageCode;
     for (var meeting in data) {
       List<Widget> col = [
         Container(
@@ -90,15 +93,20 @@ class BigPlanView extends StatelessWidget {
             height: _containerHeight,
             decoration: BoxDecoration(border: Border.all()),
             child: ListTile(
-                title: Text(DateFormat("EEEE")
+                title: Text(DateFormat.EEEE(locale)
                     .format(DateTime.parse(meeting.meeting.date))))),
         Container(
-            width: colWidth,
-            height: _containerHeight,
-            decoration: BoxDecoration(border: Border.all()),
-            child: ListTile(
-                title: Text(DateFormat("yyyy-MM-dd")
-                    .format(DateTime.parse(meeting.meeting.date))))),
+          width: colWidth,
+          height: _containerHeight,
+          decoration: BoxDecoration(border: Border.all()),
+          child: ListTile(
+            title: Text(
+              DateFormat.yMMMd(locale).format(
+                DateTime.parse(meeting.meeting.date),
+              ),
+            ),
+          ),
+        ),
       ];
       for (var task in tasks) {
         for (var detail in task.taskDetails) {

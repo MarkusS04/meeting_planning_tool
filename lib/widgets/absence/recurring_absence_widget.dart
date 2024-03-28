@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
 import 'package:meeting_planning_tool/data/person/recurring_absence.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RecurringAbsenceWidget extends StatefulWidget {
   final Person person;
@@ -45,12 +47,13 @@ class _RecurringAbsenceWidgetState extends State<RecurringAbsenceWidget> {
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
-                title: const Text('Save'),
-                content: const Text('Finished Saving'),
+                title: Text(MaterialLocalizations.of(context).saveButtonLabel),
+                content: Text(AppLocalizations.of(context).finishedSaving),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('OK'),
+                    child:
+                        Text(MaterialLocalizations.of(context).okButtonLabel),
                   ),
                 ],
               ));
@@ -91,7 +94,9 @@ class _RecurringAbsenceWidgetState extends State<RecurringAbsenceWidget> {
           return const CircularProgressIndicator();
         }
         if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(
+              child: Text(
+                  '${AppLocalizations.of(context).error}: ${snapshot.error}'));
         }
         return Column(
           children: [
@@ -157,7 +162,9 @@ class _RecurringAbsenceWidgetState extends State<RecurringAbsenceWidget> {
               ),
             ),
             TextButton(
-                onPressed: _saveWeekdaySelections, child: const Text('Save'))
+              onPressed: _saveWeekdaySelections,
+              child: Text(MaterialLocalizations.of(context).saveButtonLabel),
+            )
           ],
         );
       }),
@@ -165,23 +172,9 @@ class _RecurringAbsenceWidgetState extends State<RecurringAbsenceWidget> {
   }
 
   String _getWeekdayName(int index) {
-    switch (index) {
-      case 0:
-        return 'Sunday';
-      case 1:
-        return 'Monday';
-      case 2:
-        return 'Tuesday';
-      case 3:
-        return 'Wednesday';
-      case 4:
-        return 'Thursday';
-      case 5:
-        return 'Friday';
-      case 6:
-        return 'Saturday';
-      default:
-        return '';
-    }
+    final locale = Localizations.localeOf(context).languageCode;
+    final dateTime = DateTime(
+        2024, 1, 0 + index); // Just an arbitrary date for getting weekday name
+    return DateFormat.EEEE(locale).format(dateTime);
   }
 }

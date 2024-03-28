@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-List<PopupMenuEntry<String>> editItems() {
+List<PopupMenuEntry<String>> editItems(BuildContext context) {
   return [
-    const PopupMenuItem(
+    PopupMenuItem(
       value: 'Update',
       child: Row(
         children: [
-          Icon(Icons.update),
-          Text('Update'),
+          const Icon(Icons.update),
+          Text(AppLocalizations.of(context).update),
         ],
       ),
     ),
-    const PopupMenuItem(
+    PopupMenuItem(
       value: 'Delete',
       child: Row(
         children: [
-          Icon(Icons.delete),
-          Text('Delete'),
+          const Icon(Icons.delete),
+          Text(MaterialLocalizations.of(context).deleteButtonTooltip),
         ],
       ),
     )

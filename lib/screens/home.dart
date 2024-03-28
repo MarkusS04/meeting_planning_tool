@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/screens/navbar.dart';
 import 'package:meeting_planning_tool/data/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,10 +10,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text(AppLocalizations.of(context).home),
       ),
       body: Center(
-        child: Text("Welcome back: ${User.username}!\nEnjoy the programm"),
+        child: Text(
+            '${AppLocalizations.of(context).welcomeback}: ${User.username}!'),
       ),
       bottomNavigationBar: const BottomNavBar(currentIndex: 0),
     );

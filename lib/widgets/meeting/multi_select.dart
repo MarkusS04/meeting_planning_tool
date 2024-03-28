@@ -2,6 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:meeting_planning_tool/api_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MultiDateSelector extends StatefulWidget {
   const MultiDateSelector({super.key});
@@ -20,7 +21,7 @@ class _MultiDateSelectorState extends State<MultiDateSelector> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Multiple Date Picker'),
+      title: Text(AppLocalizations.of(context).multiDatePicker),
       content: SizedBox(
         // Wrap the content with a Container
         width: double.maxFinite,
@@ -39,7 +40,7 @@ class _MultiDateSelectorState extends State<MultiDateSelector> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
         ),
         TextButton(
           onPressed: () async {
@@ -52,7 +53,7 @@ class _MultiDateSelectorState extends State<MultiDateSelector> {
             ApiService.postData<void>(context, "meeting", data, {}, (p0) => {});
             Navigator.of(context).pop();
           },
-          child: const Text('Save'),
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
         ),
       ],
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:meeting_planning_tool/data/plan/plan.dart';
 import 'package:meeting_planning_tool/data/task/task.dart';
 import 'package:meeting_planning_tool/data/task/task_detail.dart';
+import 'package:meeting_planning_tool/widgets/date_text.dart';
 import 'package:meeting_planning_tool/widgets/plan/person_tile.dart';
 
 class SmallPlanView extends StatelessWidget {
@@ -16,10 +16,7 @@ class SmallPlanView extends StatelessWidget {
       itemBuilder: (context, index) {
         PlanMeetingData planData = data.data[index];
         return ExpansionTile(
-          title: Text(DateFormat("yyyy-MM-dd")
-              .format(DateTime.parse(planData.meeting.date))),
-          subtitle: Text(
-              DateFormat("EEEE").format(DateTime.parse(planData.meeting.date))),
+          title: ShowDateWidget(date: DateTime.parse(planData.meeting.date)),
           children: [
             Padding(
               padding:

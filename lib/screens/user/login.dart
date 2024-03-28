@@ -6,6 +6,7 @@ import 'package:meeting_planning_tool/data/api.dart';
 import 'package:meeting_planning_tool/data/user.dart';
 import 'package:meeting_planning_tool/widgets/api_url_text_field.dart';
 import 'package:meeting_planning_tool/widgets/pw_text_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -14,7 +15,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text(AppLocalizations.of(context).login),
       ),
       body: const Center(
         child: Padding(
@@ -57,9 +58,9 @@ class _LoginFormState extends State<LoginForm> {
               TextField(
                 autofillHints: const [AutofillHints.username],
                 controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context).username,
+                  border: const OutlineInputBorder(),
                 ),
                 textInputAction: TextInputAction.next,
                 autofocus: true,
@@ -72,7 +73,9 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: _login,
-                child: const Text('Login'),
+                child: Text(
+                  AppLocalizations.of(context).login,
+                ),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MonthPicker extends StatefulWidget {
   final DateTime month;
@@ -37,13 +38,14 @@ class _MonthPickerState extends State<MonthPicker> {
         });
       },
       child: InputDecorator(
-        decoration: const InputDecoration(
-          labelText: 'Month',
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context).month,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(DateFormat('MMMM yyyy').format(_month)),
+            Text(DateFormat.yMMMM(Localizations.localeOf(context).languageCode)
+                .format(_month)),
             const Icon(Icons.calendar_today),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MeetingAbseneEdit extends StatefulWidget {
   final List<Person> people;
@@ -26,7 +27,7 @@ class _MeetingAbseneEditState extends State<MeetingAbseneEdit> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit Absence'),
+      title: Text(AppLocalizations.of(context).editAbsence),
       content: SingleChildScrollView(
         child: _buildContent(),
       ),
@@ -35,7 +36,7 @@ class _MeetingAbseneEditState extends State<MeetingAbseneEdit> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
         ),
         TextButton(
           onPressed: () {
@@ -44,7 +45,7 @@ class _MeetingAbseneEditState extends State<MeetingAbseneEdit> {
             }
             Navigator.of(context).pop([selectedPeople, deselectedPeople]);
           },
-          child: const Text('OK'),
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
         ),
       ],
     );
@@ -60,9 +61,9 @@ class _MeetingAbseneEditState extends State<MeetingAbseneEdit> {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Available',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context).available,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold, // Makes text bold
                   fontSize: 20.0, // Increases font size
                 ),
@@ -74,9 +75,9 @@ class _MeetingAbseneEditState extends State<MeetingAbseneEdit> {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Absence',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context).absence,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold, // Makes text bold
                   fontSize: 20.0, // Increases font size
                 ),
@@ -90,17 +91,17 @@ class _MeetingAbseneEditState extends State<MeetingAbseneEdit> {
       // For smaller screens
       return Column(
         children: [
-          const Text(
-            'Available',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context).available,
+            style: const TextStyle(
               fontWeight: FontWeight.bold, // Makes text bold
               fontSize: 20.0, // Increases font size
             ),
           ),
           ..._buildAvailablePeople(),
-          const Text(
-            'Absence',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context).absence,
+            style: const TextStyle(
               fontWeight: FontWeight.bold, // Makes text bold
               fontSize: 20.0, // Increases font size
             ),

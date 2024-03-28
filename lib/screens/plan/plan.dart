@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -11,6 +10,7 @@ import 'package:meeting_planning_tool/widgets/month_picker.dart';
 import 'package:meeting_planning_tool/widgets/plan/view.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PlanPage extends StatefulWidget {
   const PlanPage({super.key});
@@ -26,7 +26,7 @@ class _PlanPageState extends State<PlanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plan'),
+        title: Text(AppLocalizations.of(context).plan),
       ),
       body: Column(
         children: [
@@ -49,7 +49,7 @@ class _PlanPageState extends State<PlanPage> {
         children: [
           SpeedDialChild(
               child: const Icon(Icons.picture_as_pdf),
-              label: "Get PDF",
+              label: AppLocalizations.of(context).showPDF,
               onTap: () async {
                 String path = await ApiService.downloadFile(
                     context, 'plan', queryParam(_month));
@@ -59,7 +59,7 @@ class _PlanPageState extends State<PlanPage> {
                       MaterialPageRoute(
                         builder: (context) => Scaffold(
                           appBar: AppBar(
-                            title: const Text('Preview'),
+                            title: Text(AppLocalizations.of(context).preview),
                           ),
                           body: PDFView(
                             filePath: path,
@@ -79,7 +79,7 @@ class _PlanPageState extends State<PlanPage> {
               }),
           SpeedDialChild(
               child: const Icon(Icons.add_box),
-              label: "Create Plan",
+              label: AppLocalizations.of(context).createPlan,
               onTap: () async {
                 ApiService.postData(
                     context, "plan", null, queryParam(_month), (p0) => null);

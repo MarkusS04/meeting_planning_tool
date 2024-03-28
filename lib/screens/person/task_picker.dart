@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/data/task/task.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskDialog extends StatefulWidget {
   final List<Task> tasks;
@@ -27,7 +28,7 @@ class _TaskDialogState extends State<TaskDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Select Task"),
+      title: Text(AppLocalizations.of(context).selectTask),
       content: SingleChildScrollView(
         child: Column(
           children: widget.tasks.map<Widget>((task) {
@@ -69,7 +70,7 @@ class _TaskDialogState extends State<TaskDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
         ),
         TextButton(
           onPressed: () {
@@ -78,7 +79,7 @@ class _TaskDialogState extends State<TaskDialog> {
             }
             Navigator.of(context).pop([selectedTaskDetails, deselectedTask]);
           },
-          child: const Text('OK'),
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
         ),
       ],
     );

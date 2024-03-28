@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/screens/startup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SetApperance extends StatefulWidget {
   const SetApperance({super.key});
@@ -69,7 +70,7 @@ class _SetApperanceState extends State<SetApperance> {
           return const CircularProgressIndicator();
         } else {
           return ListTile(
-              title: const Text('Switch Theme'),
+              title: Text(AppLocalizations.of(context).changeTheme),
               trailing: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: ToggleButtons(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PasswordInputField extends StatefulWidget {
   final TextEditingController pwController;
@@ -25,7 +26,7 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
       controller: widget.pwController,
       autofillHints: const [AutofillHints.password],
       decoration: InputDecoration(
-        labelText: 'Password',
+        labelText: AppLocalizations.of(context).password,
         border: const OutlineInputBorder(),
         suffixIcon: IconButton(
           icon: Icon(_showAsterisk ? Icons.visibility : Icons.visibility_off),

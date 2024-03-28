@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/api_service.dart';
 import 'package:meeting_planning_tool/data/result_api.dart';
 import 'package:meeting_planning_tool/widgets/pw_text_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PasswordChangeDialog extends StatefulWidget {
   const PasswordChangeDialog({super.key});
@@ -17,11 +18,18 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
   final TextEditingController _passwordController2 = TextEditingController();
   bool _passwordsMatch = false;
   bool _minLengthUsed = false;
+  late AppLocalizations _local;
+
+  @override
+  void didChangeDependencies() {
+    _local = AppLocalizations.of(context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Change Password'),
+      title: Text(_local.changepw),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +68,7 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(_local.cancel),
         ),
         TextButton(
           onPressed: _passwordsMatch
@@ -77,19 +85,19 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                              title: const Text("Status"),
+                              title: Text(_local.status),
                               content: Text(r.result),
                               actions: [
                                 TextButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                                    child: const Text('OK'))
+                                    child: Text(_local.ok))
                               ]);
                         });
                   }
                 }
               : null,
-          child: const Text('Change'),
+          child: Text(_local.change),
         ),
       ],
     );
@@ -97,8 +105,8 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
 
   String _buttonText() {
     if (!_minLengthUsed) {
-      return "Password must have at least $_minLength character";
+      return _local.passwordMinLength(_minLength);
     }
-    return _passwordsMatch ? "" : "Passwords don't match";
+    return _passwordsMatch ? "" : _local.passwordDontMatch;
   }
 }

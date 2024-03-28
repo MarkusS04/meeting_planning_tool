@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key, required this.currentIndex});
 
-  final int currentIndex; // Add this property
+  final int currentIndex;
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+          icon: const Icon(Icons.home),
+          label: AppLocalizations.of(context).home,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.people),
-          label: 'People',
+          icon: const Icon(Icons.people),
+          label: AppLocalizations.of(context).people,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.edit_calendar),
-          label: 'Meeting',
+          icon: const Icon(Icons.edit_calendar),
+          label: AppLocalizations.of(context).meeting,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.task_outlined),
-          label: 'Task',
+          icon: const Icon(Icons.task_outlined),
+          label: AppLocalizations.of(context).task,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.dashboard_outlined),
-          label: 'Plan',
+          icon: const Icon(Icons.dashboard_outlined),
+          label: AppLocalizations.of(context).plan,
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
+        BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: AppLocalizations.of(context).settings)
       ],
       currentIndex: currentIndex,
       selectedItemColor: Colors.amber[800],

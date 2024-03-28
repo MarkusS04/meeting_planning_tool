@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/data/person/person.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MeetingAbsenceView extends StatelessWidget {
   final Future<List<Person>> people;
@@ -16,9 +17,9 @@ class MeetingAbsenceView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text('Absence:'),
+                  Text('${AppLocalizations.of(context).absence}:'),
                   ...(people == null || people.isEmpty
-                      ? const [Text('No absence')]
+                      ? [Text(AppLocalizations.of(context).noData)]
                       : people.map((person) {
                           final name = '${person.givenName} ${person.lastName}';
                           return ListTile(title: Text(name));

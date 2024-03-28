@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:meeting_planning_tool/data/meeting/meeting.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:meeting_planning_tool/widgets/date_text.dart';
 
 class PersonAbsenceEdit extends StatefulWidget {
   final List<Meeting> meetings;
   final List<int> meetingsSelected;
 
   const PersonAbsenceEdit({
-    Key? key,
+    super.key,
     required this.meetings,
     required this.meetingsSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<PersonAbsenceEdit> createState() => _PersonAbsenceEditState();
@@ -31,7 +32,7 @@ class _PersonAbsenceEditState extends State<PersonAbsenceEdit> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit Absence'),
+      title: Text(AppLocalizations.of(context).editAbsence),
       content: SingleChildScrollView(
         child: _buildContent(),
       ),
@@ -40,11 +41,11 @@ class _PersonAbsenceEditState extends State<PersonAbsenceEdit> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
         ),
         TextButton(
           onPressed: _saveChanges,
-          child: const Text('Save'),
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
         ),
       ],
     );
@@ -64,7 +65,7 @@ class _PersonAbsenceEditState extends State<PersonAbsenceEdit> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Available'),
+              _buildSectionTitle(AppLocalizations.of(context).available),
               ..._buildAvailableMeetings(),
             ],
           ),
@@ -73,7 +74,7 @@ class _PersonAbsenceEditState extends State<PersonAbsenceEdit> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Absence'),
+              _buildSectionTitle(AppLocalizations.of(context).absence),
               ..._buildAbsentMeetings(),
             ],
           ),
@@ -85,9 +86,9 @@ class _PersonAbsenceEditState extends State<PersonAbsenceEdit> {
   Widget _buildSmallScreenContent() {
     return Column(
       children: [
-        _buildSectionTitle('Available'),
+        _buildSectionTitle(AppLocalizations.of(context).available),
         ..._buildAvailableMeetings(),
-        _buildSectionTitle('Absence'),
+        _buildSectionTitle(AppLocalizations.of(context).absence),
         ..._buildAbsentMeetings(),
       ],
     );
@@ -96,7 +97,7 @@ class _PersonAbsenceEditState extends State<PersonAbsenceEdit> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20.0,
       ),
@@ -130,15 +131,7 @@ class _PersonAbsenceEditState extends State<PersonAbsenceEdit> {
           });
         },
         child: ListTile(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(DateFormat("EEEE").format(DateTime.parse(meeting.date))),
-              Text(DateFormat("yyyy-MM-dd")
-                  .format(DateTime.parse(meeting.date))),
-              const SizedBox(width: 5),
-            ],
-          ),
+          title: ShowDateWidget(date: DateTime.parse(meeting.date)),
         ),
       );
     }).toList();

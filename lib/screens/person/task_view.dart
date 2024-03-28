@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meeting_planning_tool/data/task/task.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskViewPersonPage extends StatelessWidget {
   final List<Task> tasks;
@@ -27,6 +28,6 @@ class TaskViewPersonPage extends StatelessWidget {
               );
             }).toList(),
           )
-        : const Center(child: Text("No Tasks"));
+        : Center(child: Text(AppLocalizations.of(context).noData));
   }
 }

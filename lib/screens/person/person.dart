@@ -7,6 +7,7 @@ import 'package:meeting_planning_tool/screens/navbar.dart';
 import 'package:meeting_planning_tool/screens/person/person_absence.dart';
 import 'package:meeting_planning_tool/screens/person/task_picker.dart';
 import 'package:meeting_planning_tool/screens/person/task_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonListPage extends StatefulWidget {
   const PersonListPage({super.key});
@@ -18,6 +19,13 @@ class PersonListPage extends StatefulWidget {
 class _PersonListPageState extends State<PersonListPage> {
   late Future<List<Person>> _futurePersons;
   late List<Task> _tasks;
+  late AppLocalizations _locale;
+
+  @override
+  void didChangeDependencies() {
+    _locale = AppLocalizations.of(context);
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
@@ -31,7 +39,7 @@ class _PersonListPageState extends State<PersonListPage> {
     return Scaffold(
       // Wrap with Scaffold
       appBar: AppBar(
-        title: const Text('Person List'),
+        title: Text(_locale.people),
       ),
       body: _personDataView(),
       floatingActionButton: FloatingActionButton(
@@ -51,7 +59,7 @@ class _PersonListPageState extends State<PersonListPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(child: Text('${_locale.error}: ${snapshot.error}'));
         } else {
           List<Person>? persons = snapshot.data;
           return ListView.builder(
@@ -67,7 +75,7 @@ class _PersonListPageState extends State<PersonListPage> {
 
   Widget _buildPersonTile(Person person) {
     return ExpansionTile(
-      title: Text("${person.givenName} ${person.lastName}"),
+      title: Text('${person.givenName} ${person.lastName}'),
       trailing: _personMenu(person),
       children: [
         Padding(
@@ -79,11 +87,12 @@ class _PersonListPageState extends State<PersonListPage> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Center(
+                    child: Text('${_locale.error}: ${snapshot.error}'));
               } else {
                 List<Task>? tasks = snapshot.data;
                 if (tasks == null) {
-                  return const Text("No Tasks for Person");
+                  return Text(_locale.noData);
                 }
                 return TaskViewPersonPage(tasks: tasks);
               }
@@ -111,21 +120,21 @@ class _PersonListPageState extends State<PersonListPage> {
         }
       },
       itemBuilder: (context) => [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'Update',
           child: Row(
             children: [
-              Icon(Icons.change_circle_outlined),
-              Text('Change Tasks'),
+              const Icon(Icons.change_circle_outlined),
+              Text(_locale.changeTask),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'Absence',
           child: Row(
             children: [
-              Icon(Icons.calendar_month),
-              Text('Absence'),
+              const Icon(Icons.calendar_month),
+              Text(_locale.absence2),
             ],
           ),
         )
@@ -177,7 +186,7 @@ class _PersonListPageState extends State<PersonListPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Add Person'),
+          title: Text(_locale.addPerson),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -185,16 +194,16 @@ class _PersonListPageState extends State<PersonListPage> {
                 onChanged: (value) {
                   givenName = value;
                 },
-                decoration: const InputDecoration(
-                  hintText: 'Givenname',
+                decoration: InputDecoration(
+                  hintText: _locale.givenname,
                 ),
               ),
               TextField(
                 onChanged: (value) {
                   lastName = value;
                 },
-                decoration: const InputDecoration(
-                  hintText: 'Lastname',
+                decoration: InputDecoration(
+                  hintText: _locale.lastname,
                 ),
               ),
             ],
@@ -204,7 +213,7 @@ class _PersonListPageState extends State<PersonListPage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
               },
-              child: const Text('Cancel'),
+              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
             ),
             TextButton(
               onPressed: () async {
@@ -221,7 +230,7 @@ class _PersonListPageState extends State<PersonListPage> {
                   Navigator.of(context).pop(); // Close dialog
                 }
               },
-              child: const Text('Add'),
+              child: Text(MaterialLocalizations.of(context).saveButtonLabel),
             ),
           ],
         );
