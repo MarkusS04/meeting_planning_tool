@@ -240,12 +240,13 @@ class _PersonListPageState extends State<PersonListPage> {
 
   void _updateTaskPerson(Person person) async {
     List<int> selected = [];
-    _loadPersonTask(person).then((value) {
+    await _loadPersonTask(person).then((value) {
       List<Task> selectedTasks = value;
 
       for (var t in selectedTasks) {
         for (var td in t.taskDetails) {
           selected.add(td.id);
+          print(td.descr);
         }
       }
     });
