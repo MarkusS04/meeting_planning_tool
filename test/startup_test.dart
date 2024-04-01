@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:meeting_planning_tool/data/api.dart';
+import 'package:meeting_planning_tool/models/api.dart';
 import 'package:meeting_planning_tool/screens/home.dart';
 import 'package:meeting_planning_tool/screens/startup.dart';
 import 'package:meeting_planning_tool/screens/user/login.dart';

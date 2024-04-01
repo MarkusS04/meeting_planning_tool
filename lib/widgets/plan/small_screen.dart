@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/data/plan/plan.dart';
-import 'package:meeting_planning_tool/data/task/task.dart';
-import 'package:meeting_planning_tool/data/task/task_detail.dart';
+import 'package:meeting_planning_tool/models/plan/plan.dart';
+import 'package:meeting_planning_tool/models/task/task.dart';
+import 'package:meeting_planning_tool/models/task/task_detail.dart';
 import 'package:meeting_planning_tool/widgets/date_text.dart';
 import 'package:meeting_planning_tool/widgets/plan/person_tile.dart';
 

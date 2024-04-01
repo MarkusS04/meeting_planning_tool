@@ -1,7 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:meeting_planning_tool/api_service.dart';
+import 'package:meeting_planning_tool/services/api_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MultiDateSelector extends StatefulWidget {

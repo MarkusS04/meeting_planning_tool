@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/data/plan/load_plan.dart';
-import 'package:meeting_planning_tool/data/plan/plan.dart';
+import 'package:meeting_planning_tool/models/plan/load_plan.dart';
+import 'package:meeting_planning_tool/models/plan/plan.dart';
 import 'package:meeting_planning_tool/widgets/plan/big_screen.dart';
 import 'package:meeting_planning_tool/widgets/plan/small_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/data/task/task.dart';
+import 'package:meeting_planning_tool/models/task/task.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskViewPersonPage extends StatelessWidget {

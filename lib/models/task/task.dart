@@ -1,4 +1,4 @@
-import 'package:meeting_planning_tool/data/task/task_detail.dart';
+import 'package:meeting_planning_tool/models/task/task_detail.dart';
 
 class Task {
   final int id;

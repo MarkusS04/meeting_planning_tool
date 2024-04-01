@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:meeting_planning_tool/data/plan/plan.dart';
-import 'package:meeting_planning_tool/data/task/task.dart';
+import 'package:meeting_planning_tool/models/plan/plan.dart';
+import 'package:meeting_planning_tool/models/task/task.dart';
 import 'package:meeting_planning_tool/widgets/plan/person_tile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

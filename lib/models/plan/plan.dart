@@ -1,7 +1,7 @@
-import 'package:meeting_planning_tool/data/meeting/meeting.dart';
-import 'package:meeting_planning_tool/data/person/person.dart';
-import 'package:meeting_planning_tool/data/task/task.dart';
-import 'package:meeting_planning_tool/data/task/task_detail.dart';
+import 'package:meeting_planning_tool/models/meeting/meeting.dart';
+import 'package:meeting_planning_tool/models/person/person.dart';
+import 'package:meeting_planning_tool/models/task/task.dart';
+import 'package:meeting_planning_tool/models/task/task_detail.dart';
 
 class Plan {
   final int id;
@@ -56,7 +56,8 @@ class TransformedPlan {
           data.add(currentPlanData);
           currentPlanData = PlanMeetingData(meeting: plan.meeting, person: {});
         }
-        currentPlanData.person[plan.taskDetail] = PersonWithPlanId(person: plan.person, planId: plan.id);
+        currentPlanData.person[plan.taskDetail] =
+            PersonWithPlanId(person: plan.person, planId: plan.id);
         lastMeeting = plan.meeting.id;
       }
       data.add(currentPlanData);

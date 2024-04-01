@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/api_service.dart';
-import 'package:meeting_planning_tool/data/result_api.dart';
+import 'package:meeting_planning_tool/services/api_service.dart';
+import 'package:meeting_planning_tool/models/result_api.dart';
 import 'package:meeting_planning_tool/widgets/pw_text_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

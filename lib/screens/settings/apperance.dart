@@ -43,18 +43,23 @@ class _SetApperanceState extends State<SetApperance> {
   }
 
   void _onToggle(int index) async {
+    ThemeMode mode;
     switch (index) {
       case 0:
         _theme = "light";
+        mode = ThemeMode.light;
         break;
       case 1:
         _theme = "dark";
+        mode = ThemeMode.dark;
         break;
-      case 2:
+      default:
         _theme = "system";
+        mode = ThemeMode.system;
         break;
     }
-    StartPageScreenState.setTheme(context);
+
+    StartPageScreenState.setTheme(context, mode);
     await _prefs.setString('theme', _theme);
     setState(() {
       _updateSelections();

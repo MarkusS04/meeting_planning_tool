@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/api_service.dart';
-import 'package:meeting_planning_tool/data/person/person.dart';
+import 'package:meeting_planning_tool/services/api_service.dart';
+import 'package:meeting_planning_tool/models/person/person.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonDropdown extends StatefulWidget {

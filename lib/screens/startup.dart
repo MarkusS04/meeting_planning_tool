@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/data/api.dart';
+import 'package:meeting_planning_tool/models/api.dart';
 import 'package:meeting_planning_tool/screens/home.dart';
 import 'package:meeting_planning_tool/screens/settings/settings.dart';
 import 'package:meeting_planning_tool/screens/user/login.dart';
@@ -36,22 +36,12 @@ class StartPageScreenState extends State<StartPageScreen> {
     });
   }
 
-  static Future<void> setTheme(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? url = prefs.getString('theme');
+  static void setTheme(BuildContext context, ThemeMode theme) {
     if (context.mounted) {
       StartPageScreenState? state =
           context.findAncestorStateOfType<StartPageScreenState>();
       if (state != null) {
-        ThemeMode mode = ThemeMode.system;
-        if (url != null) {
-          if (url == "light") {
-            mode = ThemeMode.light;
-          } else if (url == "dark") {
-            mode = ThemeMode.dark;
-          }
-        }
-        state._setTheme(mode);
+        state._setTheme(theme);
       }
     }
   }

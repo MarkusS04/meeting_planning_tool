@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/data/api.dart';
-import 'package:meeting_planning_tool/screens/navbar.dart';
+import 'package:meeting_planning_tool/models/api.dart';
+import 'package:meeting_planning_tool/widgets/navbar.dart';
 import 'package:meeting_planning_tool/screens/settings/apperance.dart';
 import 'package:meeting_planning_tool/screens/settings/change_api.dart';
 import 'package:meeting_planning_tool/screens/settings/language.dart';

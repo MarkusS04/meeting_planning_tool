@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/api_service.dart';
-import 'package:meeting_planning_tool/data/task/task.dart';
+import 'package:meeting_planning_tool/services/api_service.dart';
+import 'package:meeting_planning_tool/models/task/task.dart';
 import 'package:logger/web.dart';
-import 'package:meeting_planning_tool/data/task/task_detail.dart';
-import 'package:meeting_planning_tool/screens/navbar.dart';
+import 'package:meeting_planning_tool/models/task/task_detail.dart';
+import 'package:meeting_planning_tool/widgets/navbar.dart';
 import 'package:meeting_planning_tool/screens/task/add_task.dart';
 import 'package:meeting_planning_tool/widgets/edit_menu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

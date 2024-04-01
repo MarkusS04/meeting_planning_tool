@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/web.dart';
-import 'package:meeting_planning_tool/api_service.dart';
-import 'package:meeting_planning_tool/data/plan/plan.dart';
-import 'package:meeting_planning_tool/data/task/task.dart';
+import 'package:meeting_planning_tool/services/api_service.dart';
+import 'package:meeting_planning_tool/models/plan/plan.dart';
+import 'package:meeting_planning_tool/models/task/task.dart';
 
 Future<TransformedPlan?> fetchPlan(BuildContext context, DateTime month) async {
   try {

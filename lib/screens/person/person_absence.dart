@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/api_service.dart';
-import 'package:meeting_planning_tool/data/meeting/meeting.dart';
-import 'package:meeting_planning_tool/data/person/person.dart';
-import 'package:meeting_planning_tool/data/plan/load_plan.dart';
+import 'package:meeting_planning_tool/services/api_service.dart';
+import 'package:meeting_planning_tool/models/meeting/meeting.dart';
+import 'package:meeting_planning_tool/models/person/person.dart';
+import 'package:meeting_planning_tool/models/plan/load_plan.dart';
 import 'package:meeting_planning_tool/screens/person/person_absence_edit.dart';
 import 'package:meeting_planning_tool/widgets/absence/recurring_absence_widget.dart';
 import 'package:meeting_planning_tool/widgets/date_text.dart';

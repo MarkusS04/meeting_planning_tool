@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/api_service.dart';
-import 'package:meeting_planning_tool/data/task/task.dart';
-import 'package:meeting_planning_tool/data/task/task_detail.dart';
+import 'package:meeting_planning_tool/services/api_service.dart';
+import 'package:meeting_planning_tool/models/task/task.dart';
+import 'package:meeting_planning_tool/models/task/task_detail.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddTaskPage extends StatefulWidget {

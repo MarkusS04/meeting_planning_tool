@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meeting_planning_tool/data/meeting/meeting.dart';
+import 'package:meeting_planning_tool/models/meeting/meeting.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meeting_planning_tool/widgets/date_text.dart';
 
