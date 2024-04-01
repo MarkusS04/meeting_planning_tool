@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:meeting_planning_tool/l10n/lang.dart';
 import 'package:meeting_planning_tool/screens/startup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,13 +26,14 @@ class _SetLanguageWidgetState extends State<SetLanguageWidget> {
       title: Text(AppLocalizations.of(context).lang),
       trailing: DropdownButton<Locale>(
         value: _locale,
-        onChanged: (Locale? lang) {
+        onChanged: (Locale? lang) async {
           if (lang != null) {
-            setState(() async {
-              _locale = lang;
-              SharedPreferences prefs = await SharedPreferences.getInstance();
+            _locale = lang;
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
               prefs.setString('langCode', _locale.languageCode);
               StartPageScreenState.setLocale(context, _locale);
+              FocusScope.of(context).requestFocus(FocusNode());
             });
           }
         },
@@ -39,7 +41,7 @@ class _SetLanguageWidgetState extends State<SetLanguageWidget> {
             .map<DropdownMenuItem<Locale>>((Locale locale) {
           return DropdownMenuItem<Locale>(
             value: locale,
-            child: Text(locale.languageCode),
+            child: Text(langs[locale.languageCode] ?? locale.languageCode),
           );
         }).toList(),
       ),
