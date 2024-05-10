@@ -125,9 +125,26 @@ class _TaskPageState extends State<TaskPage> {
             });
           } else if (value == 'Update') {
             _updateDescr('task/${task.id}', task.descr);
+          } else if (value == 'Add') {
+            _addTaskDetail('task/${task.id}/detail');
           }
         },
-        itemBuilder: (context) => editItems(context));
+        itemBuilder: (context) {
+          List<PopupMenuEntry<String>> menu = editItems(context);
+          menu.add(
+            PopupMenuItem(
+              value: 'Add',
+              child: Row(
+                children: [
+                  const Icon(Icons.add),
+                  Text(AppLocalizations.of(context).addTaskDetail),
+                ],
+              ),
+            ),
+          );
+          return menu;
+        },
+        );
   }
 
   PopupMenuButton<String> _taskdetailMenu(TaskDetail detail, Task task) {
@@ -186,6 +203,41 @@ class _TaskPageState extends State<TaskPage> {
               });
               if (context.mounted) {
                 Navigator.of(context).pop(); // Close dialog
+              }
+            },
+            child: Text(MaterialLocalizations.of(context).saveButtonLabel),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _addTaskDetail(String url) {
+    final TextEditingController descrController =
+        TextEditingController(text: '');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context).addTaskDetail),
+        content: TextField(
+          controller: descrController,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () async {
+              await ApiService.postData(
+                  context, url, {"Descr": descrController.text}, {}, (p0) => null);
+              setState(() {
+                _tasks = _fetchTask();
+              });
+              if (context.mounted) {
+                Navigator.of(context).pop();
               }
             },
             child: Text(MaterialLocalizations.of(context).saveButtonLabel),
