@@ -48,7 +48,7 @@ jobs:
         run: |
           flutter build linux --release
           tar -cvzf Meeting_Planning_Tool.tar.gz build/linux/x64/release/bundle
-                - name: Upload a Build Artifact
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.3.3
         with:

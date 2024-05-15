@@ -246,7 +246,6 @@ class _PersonListPageState extends State<PersonListPage> {
       for (var t in selectedTasks) {
         for (var td in t.taskDetails) {
           selected.add(td.id);
-          print(td.descr);
         }
       }
     });

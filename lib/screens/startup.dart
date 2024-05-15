@@ -7,7 +7,6 @@ import 'package:meeting_planning_tool/screens/meeting/meeting_overview.dart';
 import 'package:meeting_planning_tool/screens/person/person.dart';
 import 'package:meeting_planning_tool/screens/plan/plan.dart';
 import 'package:meeting_planning_tool/screens/task/task_overview.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartPageScreen extends StatefulWidget {

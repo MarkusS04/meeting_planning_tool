@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:meeting_planning_tool/models/api.dart';
 import 'package:meeting_planning_tool/screens/startup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_html/html.dart' as html;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +37,13 @@ Locale _getLocale(SharedPreferences prefs) {
     return Locale(langCode, prefs.getString('countryCode'));
   }
 
-  final locale = Platform.localeName;
+  final String locale;
+  if (kIsWeb) {
+    locale = html.window.navigator.language ?? 'en';
+  } else {
+    locale = Platform.localeName;
+  }
+
   RegExp regex = RegExp(r'^([a-z]{2})(?:_([A-Z]{2}))?');
   Match? match = regex.firstMatch(locale);
 
