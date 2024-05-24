@@ -43,6 +43,8 @@
     "noEntryGenerated": "Не создано",
     "notAssigned": "Не назначено",
     "ok": "OK",
+    "orderTask": "Сортировка задач",
+    "orderTaskDetail": "Сортировка сведений о задаче",
     "password": "Пароль",
     "passwordDontMatch": "Пароли не совпадают",
     "passwordMinLength": "Пароль должен содержать не менее {count} символов",

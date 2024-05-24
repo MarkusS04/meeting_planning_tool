@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:meeting_planning_tool/services/api_service.dart';
 import 'package:meeting_planning_tool/models/task/task.dart';
 import 'package:logger/web.dart';
@@ -7,6 +8,8 @@ import 'package:meeting_planning_tool/widgets/navbar.dart';
 import 'package:meeting_planning_tool/screens/task/add_task.dart';
 import 'package:meeting_planning_tool/widgets/edit_menu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:meeting_planning_tool/widgets/task/order_task_widget.dart';
+import 'package:meeting_planning_tool/widgets/task/order_taskdetail_widget.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -62,10 +65,24 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Widget _floatingAction() {
-    return FloatingActionButton(
-      onPressed: addNewTask,
-      shape: const CircleBorder(),
-      child: const Icon(Icons.add),
+    return SpeedDial(
+      childPadding: const EdgeInsets.all(5),
+      spaceBetweenChildren: 4,
+      icon: Icons.settings_rounded,
+      children: [
+        SpeedDialChild(
+          onTap: _orderTask,
+          label: AppLocalizations.of(context).orderTask,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.arrow_downward),
+        ),
+        SpeedDialChild(
+          onTap: addNewTask,
+          label: AppLocalizations.of(context).addTask,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
+        ),
+      ],
     );
   }
 
@@ -117,34 +134,47 @@ class _TaskPageState extends State<TaskPage> {
 
   PopupMenuButton<String> _taskMenu(Task task) {
     return PopupMenuButton<String>(
-        onSelected: (value) async {
-          if (value == 'Delete') {
-            await ApiService.deleteData(context, "task/${task.id}", null);
-            setState(() {
-              _tasks = _fetchTask();
-            });
-          } else if (value == 'Update') {
-            _updateDescr('task/${task.id}', task.descr);
-          } else if (value == 'Add') {
-            _addTaskDetail('task/${task.id}/detail');
-          }
-        },
-        itemBuilder: (context) {
-          List<PopupMenuEntry<String>> menu = editItems(context);
-          menu.add(
-            PopupMenuItem(
-              value: 'Add',
-              child: Row(
-                children: [
-                  const Icon(Icons.add),
-                  Text(AppLocalizations.of(context).addTaskDetail),
-                ],
-              ),
+      onSelected: (value) async {
+        if (value == 'Delete') {
+          await ApiService.deleteData(context, "task/${task.id}", null);
+          setState(() {
+            _tasks = _fetchTask();
+          });
+        } else if (value == 'Update') {
+          _updateDescr('task/${task.id}', task.descr);
+        } else if (value == 'Add') {
+          _addTaskDetail('task/${task.id}/detail');
+        } else if (value == 'OrderDetails') {
+          _orderTaskDetail(task.id);
+        }
+      },
+      itemBuilder: (context) {
+        List<PopupMenuEntry<String>> menu = editItems(context);
+        menu.add(
+          PopupMenuItem(
+            value: 'Add',
+            child: Row(
+              children: [
+                const Icon(Icons.add),
+                Text(AppLocalizations.of(context).addTaskDetail),
+              ],
             ),
-          );
-          return menu;
-        },
+          ),
         );
+        menu.add(
+          PopupMenuItem(
+            value: 'OrderDetails',
+            child: Row(
+              children: [
+                const Icon(Icons.arrow_downward),
+                Text(AppLocalizations.of(context).orderTaskDetail),
+              ],
+            ),
+          ),
+        );
+        return menu;
+      },
+    );
   }
 
   PopupMenuButton<String> _taskdetailMenu(TaskDetail detail, Task task) {
@@ -231,8 +261,8 @@ class _TaskPageState extends State<TaskPage> {
           ),
           TextButton(
             onPressed: () async {
-              await ApiService.postData(
-                  context, url, {"Descr": descrController.text}, {}, (p0) => null);
+              await ApiService.postData(context, url,
+                  {"Descr": descrController.text}, {}, (p0) => null);
               setState(() {
                 _tasks = _fetchTask();
               });
@@ -244,6 +274,28 @@ class _TaskPageState extends State<TaskPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _orderTask() async {
+    List<Task> tasks = await _tasks;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => OrderTaskWidget(tasks: tasks)),
+    );
+  }
+
+  void _orderTaskDetail(int id) async {
+    List<Task> tasks = await _tasks;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => OrderTaskDetailWidget(
+              tasks: tasks
+                  .firstWhere((elem) => elem.id == id,
+                      orElse: () => throw Exception("ERROR"))
+                  .taskDetails,
+              taskID: id)),
     );
   }
 }

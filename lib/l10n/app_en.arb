@@ -43,6 +43,8 @@
     "noEntryGenerated": "No Entry generated",
     "notAssigned": "Not Assigned",
     "ok": "OK",
+    "orderTask": "Order Task",
+    "orderTaskDetail": "Order Task-Detail",
     "password": "Password",
     "passwordDontMatch": "Passwords don't match",
     "passwordMinLength": "The password must have at least {count} character",

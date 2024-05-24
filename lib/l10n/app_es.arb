@@ -43,6 +43,8 @@
     "noEntryGenerated": "No generado",
     "notAssigned": "No asignado",
     "ok": "Aceptar",
+    "orderTask": "Ordenar tareas",
+    "orderTaskDetail": "Ordenar detalles de la tarea",
     "password": "Contraseña",
     "passwordDontMatch": "Las contraseñas no coinciden",
     "passwordMinLength": "La contraseña debe tener al menos {count} caracteres",

@@ -4,8 +4,9 @@ class Task {
   final int id;
   final String descr;
   final List<TaskDetail> taskDetails;
+  int orderNumber;
 
-  Task({required this.id, required this.descr, required this.taskDetails});
+  Task({required this.id, required this.descr, required this.taskDetails, this.orderNumber = 0});
 
   factory Task.fromJson(Map<String, dynamic> json) {
     var list = json['TaskDetails'] as List?;
@@ -17,6 +18,7 @@ class Task {
       id: json['ID'],
       descr: json['Descr'],
       taskDetails: taskDetailsList,
+      orderNumber: json['OrderNumber']
     );
   }
 
@@ -28,6 +30,7 @@ class Task {
       'ID': id,
       'Descr': descr,
       'TaskDetails': taskDetailsJsonList,
+      'OrderNumber': orderNumber,
     };
   }
 }

@@ -43,6 +43,8 @@
     "noEntryGenerated": "Nicht erstellt",
     "notAssigned": "Nicht zugewiesen",
     "ok": "OK",
+    "orderTask": "Aufgaben sortieren",
+    "orderTaskDetail": "Aufgabendetails sortieren",
     "password": "Passwort",
     "passwordDontMatch": "Passwörter stimmen nicht überein",
     "passwordMinLength": "Das Passwort muss mindestens {count} Zeichen lang sein",

@@ -4,10 +4,11 @@ class TaskDetail {
   final int id;
   final String descr;
   final int taskId;
+  int orderNumber;
   Task? task;
 
   TaskDetail(
-      {required this.id, required this.descr, required this.taskId, this.task});
+      {required this.id, required this.descr, required this.taskId, this.task, this.orderNumber = 0});
 
   factory TaskDetail.fromJson(Map<String, dynamic> json) {
     if (json['Task'] != null) {
@@ -16,10 +17,11 @@ class TaskDetail {
           id: json['ID'],
           descr: json['Descr'],
           taskId: json['TaskID'],
+          orderNumber: json['OrderNumber'],
           task: task);
     } else {
       return TaskDetail(
-          id: json['ID'], descr: json['Descr'], taskId: json['TaskID']);
+          id: json['ID'], descr: json['Descr'], taskId: json['TaskID'], orderNumber: json['OrderNumber']);
     }
   }
 
