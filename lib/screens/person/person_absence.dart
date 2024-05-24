@@ -39,18 +39,27 @@ class _PersonAbsenceWidgetState extends State<PersonAbsenceWidget> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: [
-        Text(AppLocalizations.of(context).recurringAbsence),
-        Expanded(
-          child: RecurringAbsenceWidget(
-            person: widget.person,
-          ),
+    var widgets = [
+      Flexible(
+        child: Column(
+          children: [
+            Text(AppLocalizations.of(context).recurringAbsence),
+            Expanded(
+              child: RecurringAbsenceWidget(
+                person: widget.person,
+              ),
+            ),
+          ],
         ),
-        const Divider(),
-        Expanded(child: _buildAbsenceView())
-      ],
-    );
+      ),
+      const VerticalDivider(),
+      const Divider(),
+      Expanded(child: _buildAbsenceView())
+    ];
+    if (MediaQuery.of(context).size.height > 600) {
+      return Column(children: widgets);
+    }
+    return Row(children: widgets);
   }
 
   Widget _buildAbsenceView() {
