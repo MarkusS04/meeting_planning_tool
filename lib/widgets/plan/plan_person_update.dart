@@ -5,12 +5,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonDropdown extends StatefulWidget {
   final List<Person> personsAvailable;
+  final List<Person> personsAbsent;
   final Person initialSelectedPerson;
   final int planId;
 
   const PersonDropdown({
     super.key,
     required this.personsAvailable,
+    required this.personsAbsent,
     required this.initialSelectedPerson,
     required this.planId,
   });
@@ -30,6 +32,24 @@ class _PersonDropdownState extends State<PersonDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    List<DropdownMenuItem<Person>> peopleItems = [
+      ...widget.personsAvailable.map((person) => DropdownMenuItem<Person>(
+            value: person,
+            child: Text('${person.givenName} ${person.lastName}'),
+          )),
+      const DropdownMenuItem<Person>(
+        enabled: false,
+        child: Divider(
+          thickness: 1.0,
+          height: 1.0,
+          color: Colors.grey,
+        ),
+      ),
+      ...widget.personsAbsent.map((person) => DropdownMenuItem<Person>(
+            value: person,
+            child: Text('${person.givenName} ${person.lastName}'),
+          )),
+    ];
     return AlertDialog(
       title: Text(AppLocalizations.of(context).changePerson),
       content: Column(
@@ -42,12 +62,7 @@ class _PersonDropdownState extends State<PersonDropdown> {
                 selectedPerson = newValue!;
               });
             },
-            items: widget.personsAvailable.map((person) {
-              return DropdownMenuItem<Person>(
-                value: person,
-                child: Text('${person.givenName} ${person.lastName}'),
-              );
-            }).toList(),
+            items: peopleItems
           ),
         ],
       ),

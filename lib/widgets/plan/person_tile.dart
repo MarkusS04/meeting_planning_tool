@@ -42,37 +42,31 @@ class _PlanPersonTileState extends State<PlanPersonTile> {
         children: text,
       ),
       onTap: () async {
-        List<Person> personsAvailable = [];
-        if (_person != null) {
-          await ApiService.fetchData(
-              context,
-              'plan/${_person!.planId}/people',
-              {},
-              (data) => (data as List)
-                  .map((json) => Person.fromJson(json))
-                  .toList()).then((value) => personsAvailable = value);
-          _person!.person != null
-              ? personsAvailable.add(_person!.person!)
-              : null;
+        People? people;
+        await ApiService.fetchData(
+          context,
+          'plan/${_person!.planId}/people',
+          {},
+          (data) => People.fromJson(data),
+        ).then((value) => people = value);
 
-          if (context.mounted) {
-            await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return PersonDropdown(
-                    personsAvailable: personsAvailable,
-                    initialSelectedPerson: personsAvailable.last,
-                    planId: _person!.planId,
-                  );
-                });
-            if (context.mounted) {
-              final plan = await ApiService.fetchData<Plan>(context,
-                  'plan/${_person!.planId}', {}, (json) => Plan.fromJson(json));
-              setState(() {
-                _person =
-                    PersonWithPlanId(person: plan.person, planId: plan.id);
+        if (context.mounted && people != null) {
+          await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return PersonDropdown(
+                  personsAvailable: people!.available,
+                  personsAbsent: people!.absent,
+                  initialSelectedPerson: people!.available.last,
+                  planId: _person!.planId,
+                );
               });
-            }
+          if (context.mounted) {
+            final plan = await ApiService.fetchData<Plan>(context,
+                'plan/${_person!.planId}', {}, (json) => Plan.fromJson(json));
+            setState(() {
+              _person = PersonWithPlanId(person: plan.person, planId: plan.id);
+            });
           }
         }
       },
