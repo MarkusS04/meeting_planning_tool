@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/web.dart';
 import 'package:meeting_planning_tool/services/api_service.dart';
 import 'package:meeting_planning_tool/models/person/person.dart';
@@ -21,6 +23,9 @@ class _PersonListPageState extends State<PersonListPage> {
   late List<Task> _tasks;
   late AppLocalizations _locale;
 
+  ScrollController scrollController = ScrollController();
+  bool fabVisible = true;
+
   @override
   void didChangeDependencies() {
     _locale = AppLocalizations.of(context);
@@ -32,6 +37,27 @@ class _PersonListPageState extends State<PersonListPage> {
     super.initState();
     _fetchTask().then((value) => _tasks = value);
     _futurePersons = _fetchPersons();
+    scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      setState(() {
+        fabVisible = false;
+      });
+    } else if (scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      setState(() {
+        fabVisible = true;
+      });
+    }
   }
 
   @override
@@ -42,10 +68,13 @@ class _PersonListPageState extends State<PersonListPage> {
         title: Text(_locale.people),
       ),
       body: _personDataView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addPerson,
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add),
+      floatingActionButton: Visibility(
+        visible: fabVisible,
+        child: FloatingActionButton(
+          onPressed: _addPerson,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
+        ),
       ),
       bottomNavigationBar: const BottomNavBar(currentIndex: 1),
     );
@@ -63,6 +92,7 @@ class _PersonListPageState extends State<PersonListPage> {
         } else {
           List<Person>? persons = snapshot.data;
           return ListView.builder(
+            controller: scrollController,
             itemCount: persons!.length,
             itemBuilder: (context, index) {
               return _buildPersonTile(persons[index]);
