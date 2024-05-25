@@ -40,6 +40,7 @@
     "month": "Mes",
     "multiDatePicker": "Seleccionar varios días",
     "noData": "No hay datos disponibles",
+    "noPerson": "¡No hay personas disponibles, ni presentes ni ausentes!",
     "noEntryGenerated": "No generado",
     "notAssigned": "No asignado",
     "ok": "Aceptar",

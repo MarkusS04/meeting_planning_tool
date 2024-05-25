@@ -51,16 +51,42 @@ class _PlanPersonTileState extends State<PlanPersonTile> {
         ).then((value) => people = value);
 
         if (context.mounted && people != null) {
-          await showDialog(
+          Person? initialSelectedPerson;
+          if (people!.available.isNotEmpty) {
+            initialSelectedPerson = people!.available.last;
+          } else if (people!.absent.isNotEmpty) {
+            initialSelectedPerson = people!.absent.last;
+          } else {
+            showDialog(
               context: context,
               builder: (BuildContext context) {
-                return PersonDropdown(
-                  personsAvailable: people!.available,
-                  personsAbsent: people!.absent,
-                  initialSelectedPerson: people!.available.last,
-                  planId: _person!.planId,
+                return AlertDialog(
+                  title: Text(AppLocalizations.of(context).noData),
+                  content: Text(AppLocalizations.of(context).noPerson),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
                 );
-              });
+              },
+            );
+            return;
+          }
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PersonDropdown(
+                personsAvailable: people!.available,
+                personsAbsent: people!.absent,
+                initialSelectedPerson: initialSelectedPerson!,
+                planId: _person!.planId,
+              );
+            },
+          );
           if (context.mounted) {
             final plan = await ApiService.fetchData<Plan>(context,
                 'plan/${_person!.planId}', {}, (json) => Plan.fromJson(json));
