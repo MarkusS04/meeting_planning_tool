@@ -164,6 +164,9 @@ class _MeetingPageState extends State<MeetingPage> {
                   child: ExpansionTile(
                     title: ShowDateWidget(
                       date: DateTime.parse(meeting.date),
+                      child: meeting.tag != null
+                          ? Text(meeting.tag!.descr)
+                          : Container(),
                     ),
                     trailing: _meetingMenu(meeting),
                     children: [
@@ -181,36 +184,85 @@ class _MeetingPageState extends State<MeetingPage> {
 
   PopupMenuButton<String> _meetingMenu(Meeting meeting) {
     return PopupMenuButton<String>(onSelected: (value) async {
-      if (value == 'Delete') {
-        await ApiService.deleteData(context, "meeting/${meeting.id}", null);
-        setState(() {
-          _meetings = _fetchMeetings();
-        });
-      } else if (value == 'Absence') {
-        final absence = await _fetchAbsence(meeting.id);
-        final peopleSelected = absence.map((e) {
-          return e.id;
-        }).toList();
-        final people = await _fetchPersons();
+      switch (value) {
+        case 'Delete':
+          await ApiService.deleteData(context, "meeting/${meeting.id}", null);
+          setState(() {
+            _meetings = _fetchMeetings();
+          });
+          break;
+        case 'Absence':
+          final absence = await _fetchAbsence(meeting.id);
+          final peopleSelected = absence.map((e) {
+            return e.id;
+          }).toList();
+          final people = await _fetchPersons();
 
-        if (mounted) {
-          List<List<int>>? peopleAbsence = await showDialog<List<List<int>>>(
-              context: context,
-              builder: (context) {
-                return MeetingAbseneEdit(
-                    people: people, peopleSelected: peopleSelected);
-              });
-          if (peopleAbsence != null && peopleAbsence.isNotEmpty && mounted) {
-            if (peopleAbsence[0].isNotEmpty) {
-              ApiService.postData(context, 'meeting/${meeting.id}/absence',
-                  peopleAbsence[0], {}, (p0) => null);
-            }
-            if (peopleAbsence[1].isNotEmpty) {
-              ApiService.deleteData(
-                  context, 'meeting/${meeting.id}/absence', peopleAbsence[1]);
+          if (mounted) {
+            List<List<int>>? peopleAbsence = await showDialog<List<List<int>>>(
+                context: context,
+                builder: (context) {
+                  return MeetingAbseneEdit(
+                      people: people, peopleSelected: peopleSelected);
+                });
+            if (peopleAbsence != null && peopleAbsence.isNotEmpty && mounted) {
+              if (peopleAbsence[0].isNotEmpty) {
+                ApiService.postData(context, 'meeting/${meeting.id}/absence',
+                    peopleAbsence[0], {}, (p0) => null);
+              }
+              if (peopleAbsence[1].isNotEmpty) {
+                ApiService.deleteData(
+                    context, 'meeting/${meeting.id}/absence', peopleAbsence[1]);
+              }
             }
           }
-        }
+          break;
+        case 'TagAdd':
+          final TextEditingController descrController = TextEditingController();
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(AppLocalizations.of(context).addTag),
+              content: TextField(
+                controller: descrController,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                  },
+                  child:
+                      Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await ApiService.postData(
+                        context,
+                        'meeting/${meeting.id}/tag',
+                        {"descr": descrController.text},
+                        {},
+                        (p0) => null);
+                    if (context.mounted) {
+                      Navigator.of(context).pop(); // Close dialog
+                    }
+                    setState(() {
+                      _meetings = _fetchMeetings();
+                    });
+                  },
+                  child:
+                      Text(MaterialLocalizations.of(context).saveButtonLabel),
+                ),
+              ],
+            ),
+          );
+          break;
+        case 'TagDelete':
+          await ApiService.deleteData(
+              context, "meeting/${meeting.id}/tag", null);
+          setState(() {
+            _meetings = _fetchMeetings();
+          });
+          break;
       }
     }, itemBuilder: (context) {
       List<PopupMenuEntry<String>> edit = editItems(context);
@@ -223,6 +275,27 @@ class _MeetingPageState extends State<MeetingPage> {
           ],
         ),
       ));
+      if (meeting.tag == null) {
+        edit.add(PopupMenuItem(
+          value: 'TagAdd',
+          child: Row(
+            children: [
+              const Icon(Icons.tag),
+              Text(_locale.addTag),
+            ],
+          ),
+        ));
+      } else {
+        edit.add(PopupMenuItem(
+          value: 'TagDelete',
+          child: Row(
+            children: [
+              const Icon(Icons.tag),
+              Text(_locale.deleteTag),
+            ],
+          ),
+        ));
+      }
       return edit;
     });
   }
