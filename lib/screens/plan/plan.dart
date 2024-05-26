@@ -21,12 +21,28 @@ class PlanPage extends StatefulWidget {
 
 class _PlanPageState extends State<PlanPage> {
   DateTime _month = DateTime(DateTime.now().year, DateTime.now().month, 1);
+  late bool bigScreen;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    bigScreen = MediaQuery.of(context).size.width > 600;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).plan),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  bigScreen = !bigScreen;
+                });
+              },
+              icon: const Icon(Icons.change_circle_outlined))
+        ],
       ),
       body: Column(
         children: [
@@ -39,7 +55,10 @@ class _PlanPageState extends State<PlanPage> {
             },
           ),
           const SizedBox(height: 20.0),
-          PlanViewWidget(month: _month)
+          PlanViewWidget(
+            month: _month,
+            bigScreen: bigScreen,
+          )
         ],
       ),
       floatingActionButton: SpeedDial(

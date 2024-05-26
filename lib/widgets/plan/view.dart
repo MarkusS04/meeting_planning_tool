@@ -7,8 +7,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PlanViewWidget extends StatefulWidget {
   final DateTime month;
+  final bool bigScreen;
 
-  const PlanViewWidget({super.key, required this.month});
+  const PlanViewWidget({super.key, required this.month, required this.bigScreen});
 
   @override
   State<PlanViewWidget> createState() => _PlanViewWidgetState();
@@ -35,7 +36,7 @@ class _PlanViewWidgetState extends State<PlanViewWidget> {
         } else {
           TransformedPlan? data = snapshot.data;
           if (data != null && data.data.isNotEmpty) {
-            if (MediaQuery.of(context).size.width > 600) {
+            if (widget.bigScreen) {
               return BigPlanView(data: data);
             } else {
               return SmallPlanView(data: data);
