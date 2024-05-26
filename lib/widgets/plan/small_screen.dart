@@ -15,6 +15,14 @@ class SmallPlanView extends StatelessWidget {
       itemCount: data.data.length,
       itemBuilder: (context, index) {
         PlanMeetingData planData = data.data[index];
+        if (planData.meeting.tag != null) {
+          return ListTile(
+            title: ShowDateWidget(
+              date: DateTime.parse(planData.meeting.date),
+              child: Text(planData.meeting.tag!.descr),
+            ),
+          );
+        }
         return ExpansionTile(
           title: ShowDateWidget(date: DateTime.parse(planData.meeting.date)),
           children: [

@@ -108,22 +108,31 @@ class BigPlanView extends StatelessWidget {
           ),
         ),
       ];
-      for (var task in tasks) {
-        for (var detail in task.taskDetails) {
-          PersonWithPlanId? person;
-          for (var entry in meeting.person.entries) {
-            if (entry.key.id == detail.id) {
-              person = entry.value;
-              break;
+      if (meeting.meeting.tag != null) {
+        col.add(Container(
+          width: colWidth * tasks.fold(0, (sum, task) => sum + task.taskDetails.length),
+          height: _containerHeight,
+          decoration: BoxDecoration(border: Border.all()),
+          child: Text(meeting.meeting.tag!.descr),
+        ));
+      } else {
+        for (var task in tasks) {
+          for (var detail in task.taskDetails) {
+            PersonWithPlanId? person;
+            for (var entry in meeting.person.entries) {
+              if (entry.key.id == detail.id) {
+                person = entry.value;
+                break;
+              }
             }
+            col.add(Container(
+                width: colWidth,
+                height: _containerHeight,
+                decoration: BoxDecoration(border: Border.all()),
+                child: PlanPersonTile(
+                  person: person,
+                )));
           }
-          col.add(Container(
-              width: colWidth,
-              height: _containerHeight,
-              decoration: BoxDecoration(border: Border.all()),
-              child: PlanPersonTile(
-                person: person,
-              )));
         }
       }
 
