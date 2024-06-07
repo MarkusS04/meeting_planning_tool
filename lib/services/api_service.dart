@@ -170,7 +170,7 @@ class ApiService {
     }
   }
 
-  static Future<T> deleteData<T>(
+  static Future<bool> deleteData(
       BuildContext context, String path, dynamic data) async {
     final Uri url = Uri.parse('${ApiData.apiUrl}/$path');
 
@@ -183,17 +183,17 @@ class ApiService {
 
     switch (response.statusCode) {
       case 200:
-        return Future.value();
+        return Future.value(true);
       case 401:
         if (context.mounted) {
           unauthorizedDialog(context);
         }
-        return Future.value();
+        return Future.value(false);
       default:
         if (context.mounted) {
           _dialogError(context);
         }
-        return Future.value();
+        return Future.value(false);
     }
   }
 

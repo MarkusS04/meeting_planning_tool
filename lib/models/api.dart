@@ -46,8 +46,12 @@ class ApiData {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', _authToken ?? '');
   }
+}
 
-  Exception exceptionUnauthorized() {
-    return Exception('user not authorized');
-  }
+class ApiRequestResult<T> {
+  T? data;
+  String? reasonPhrase;
+  int statusCode;
+
+  ApiRequestResult({this.data, required this.statusCode, this.reasonPhrase});
 }
